@@ -19,12 +19,12 @@ import {
 } from "lucide-react";
 
 export const metadata = getPageMetadata({
-  title: "Our Services - Med Spa Marketing & Web Design",
-  description: "Comprehensive med spa marketing: Next.js web design, multi-treatment SEO, content marketing, and paid advertising. Tailored specifically for aesthetic practices.",
+  title: "Our Services - Growth Marketing & Web Design",
+  description: "Next.js web design, AI-powered SEO, GEO, content, automation, and paid ads. A full growth engine for local and service businesses and brands.",
   path: "/services",
   image: `${SITE_URL}/og-image.jpg`,
   keywords:
-    "med spa SEO, medical spa web design, content marketing, PPC for med spas, digital marketing services",
+    "AI-native growth agency, Next.js web design, local SEO, GEO, content marketing, PPC management, digital marketing services",
 });
 
 const services = [
@@ -33,15 +33,15 @@ const services = [
     icon: Code2,
     title: "Next.js + Headless CMS Websites",
     description: [
-      "We do not use templates. We do not use WordPress or Squarespace. Every Kolavi Studio website is a custom-engineered Next.js application built specifically for performance and patient conversion.",
-      "Most medical spa websites suffer from bloated code and outdated plugins that inherently slow down load times. This actively hurts your Google rankings and frustrates potential patients. We build headless architectures that guarantee lightning-fast sub-second load times.",
-      "Our websites are fully mobile-first, ensuring patients have a flawless booking experience from their phones. We also build in rigorous ADA and HIPAA compliance right from the start, protecting your practice while delivering a premium digital experience.",
+      "We do not use templates. We do not use WordPress or Squarespace. Every Kolavi Studio website is a custom-engineered Next.js application built specifically for performance and conversion.",
+      "Most business websites suffer from bloated code and outdated plugins that inherently slow down load times. This actively hurts your Google rankings and frustrates potential customers. We build headless architectures that guarantee lightning-fast sub-second load times.",
+      "Our websites are fully mobile-first, ensuring customers have a flawless booking experience from their phones. We also build in rigorous ADA accessibility right from the start, protecting your business while delivering a premium digital experience.",
     ],
     features: [
       "95+ Google PageSpeed guaranteed",
       "Sub-second page load times",
       "Fully custom, mobile-first design",
-      "ADA and HIPAA compliance built-in",
+      "ADA accessibility built-in",
       "Seamless booking system integration",
     ],
   },
@@ -50,16 +50,16 @@ const services = [
     icon: LineChart,
     title: "AI-Powered SEO",
     description: [
-      "Traditional SEO is too slow. We utilize an AI-powered SEO infrastructure to systematically dominate your local market for every single treatment you offer.",
-      "We break down search optimization into four rigorous pillars: on-page optimization, deep technical SEO, authoritative off-page citation building, and programmatic SEO. Programmatic SEO allows us to generate hundreds of highly targeted, location-specific treatment pages at scale. If someone searches for 'lip fillers near me' or 'laser hair removal in [your city]', your practice will own that search result.",
-      "We build a massive footprint of city and treatment page combinations, ensuring you capture high-intent patients exactly when they are ready to book.",
+      "Traditional SEO is too slow. We utilize an AI-powered SEO infrastructure to systematically dominate your local market for every single service you offer.",
+      "We break down search optimization into four rigorous pillars: on-page optimization, deep technical SEO, authoritative off-page citation building, and programmatic SEO. Programmatic SEO allows us to generate hundreds of highly targeted, location-specific service pages at scale. If someone searches for '[your service] near me' or '[your service] in [your city]', your business is positioned to own that search result.",
+      "We build a massive footprint of city and service page combinations, ensuring you capture high-intent customers exactly when they are ready to buy.",
     ],
     features: [
       "Programmatic SEO at massive scale",
       "Deep technical and on-page optimization",
       "Local SEO and Google Business Profile ranking",
       "Authoritative citation and link building",
-      "City and treatment specific landing pages",
+      "City and service specific landing pages",
     ],
   },
   {
@@ -67,9 +67,9 @@ const services = [
     icon: Bot,
     title: "GEO: AI Search Optimization",
     description: [
-      "Generative Engine Optimization (GEO) is the absolute future of search. Patients are no longer just Googling treatments. They are asking ChatGPT, Perplexity, and Google AI Overviews for personalized medical spa recommendations.",
+      "Generative Engine Optimization (GEO) is the absolute future of search. Customers are no longer just Googling services. They are asking ChatGPT, Perplexity, and Google AI Overviews for personalized recommendations.",
       "We actively optimize your brand to appear as the authoritative answer within these AI models. This requires a completely different approach than traditional SEO. It demands structured data, deep semantic authority, and highly specific content formatting that AI engines favor.",
-      "We position your practice as the definitive expert in your region, ensuring that when an AI recommends a local clinic, it recommends yours.",
+      "We position your business as the definitive expert in your market, so that when an AI recommends a provider, it has every reason to recommend yours.",
     ],
     features: [
       "ChatGPT and Perplexity optimization",
@@ -84,14 +84,14 @@ const services = [
     icon: Workflow,
     title: "Lead Generation & Automation",
     description: [
-      "Traffic is useless if it does not convert into paying patients. We build robust, multi-step lead generation funnels that capture attention and automate the booking process.",
-      "Our systems include highly intelligent AI chatbots that answer patient questions 24/7, direct CRM integrations, and seamless appointment reminders. We build specific funnels for high-ticket services like GLP-1 weight loss programs, ensuring leads are nurtured until they are ready to consult.",
-      "We also automate post-consultation follow-ups, membership upsells, and review requests, closing the loop and maximizing the lifetime value of every single patient.",
+      "Traffic is useless if it does not convert into paying customers. We build robust, multi-step lead generation funnels that capture attention and automate the booking process.",
+      "Our systems include highly intelligent AI chatbots that answer customer questions 24/7, direct CRM integrations, and seamless appointment reminders. We build specific funnels for your high-ticket offers, ensuring leads are nurtured until they are ready to buy.",
+      "We also automate post-sale follow-ups, membership upsells, and review requests, closing the loop and maximizing the lifetime value of every single customer.",
     ],
     features: [
       "24/7 intelligent AI chatbots",
       "Multi-step conversion funnels",
-      "GLP-1 and high-ticket treatment workflows",
+      "High-ticket offer workflows",
       "Automated appointment reminders",
       "Membership upsell automation",
     ],
@@ -102,13 +102,13 @@ const services = [
     title: "Content Engine",
     description: [
       "Content is the asset that compounds your organic traffic over time. We deploy an AI-assisted, human-edited content workflow to produce authoritative articles at scale.",
-      "We do not publish generic fluff. Every piece of content is deeply researched, medically accurate, and targeted at specific keywords your patients are actively searching for. From detailed treatment guides to recovery instructions, we build a library of trust.",
+      "We do not publish generic fluff. Every piece of content is deeply researched, fact-checked, and targeted at specific keywords your customers are actively searching for. From detailed service guides to how-to articles, we build a library of trust.",
       "We also edit and optimize your video content for short-form platforms, creating a cohesive brand narrative that captures attention across TikTok, Instagram Reels, and YouTube Shorts.",
     ],
     features: [
       "Blog content generated at scale",
       "AI-assisted, human-edited precision",
-      "Keyword-targeted treatment guides",
+      "Keyword-targeted service guides",
       "Short-form video editing and optimization",
       "Compounding organic traffic assets",
     ],
@@ -118,8 +118,8 @@ const services = [
     icon: BarChart3,
     title: "Reputation & Reporting",
     description: [
-      "You cannot improve what you cannot measure. We tie every single campaign, every keyword, and every ad dollar directly to measurable patient bookings.",
-      "We actively manage your reputation through automated review generation systems, ensuring your 5-star ratings consistently outpace your competitors. We monitor and respond to reviews, building a pristine public image for your clinic.",
+      "You cannot improve what you cannot measure. We tie every single campaign, every keyword, and every ad dollar directly to measurable leads and bookings.",
+      "We actively manage your reputation through automated review generation systems, ensuring your 5-star ratings consistently outpace your competitors. We monitor and respond to reviews, building a pristine public image for your business.",
       "You receive access to real-time dashboards and detailed monthly reports. No confusing metrics. No vanity numbers. Just a crystal-clear view of your return on investment and revenue growth.",
     ],
     features: [
@@ -158,11 +158,11 @@ export default function ServicesPage() {
           </div>
 
           <h1 className="text-hero text-foreground max-w-[900px] mx-auto text-balance mb-8">
-            Everything Your Med Spa Needs. Nothing It Doesn't.
+            Everything Your Business Needs. Nothing It Doesn't.
           </h1>
 
           <p className="text-body text-muted-foreground max-w-[650px] mx-auto text-balance mb-12">
-            A full-stack digital growth engine built exclusively for medical spas. Every service engineered to drive patient bookings, not vanity metrics.
+            A full-stack digital growth engine for businesses that refuse to blend in. Every service engineered to drive leads and revenue, not vanity metrics.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto max-w-2xl mx-auto">

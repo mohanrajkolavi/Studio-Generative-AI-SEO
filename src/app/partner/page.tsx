@@ -193,36 +193,36 @@ export default async function PartnerPage() {
               <p className="text-body text-muted-foreground max-w-2xl mx-auto mb-10">
                 We pay 10% of the Setup Fee + 5% of the Monthly Retainer for every client you close.
               </p>
-              <p className="text-sm font-medium text-foreground">Here is what that looks like in practice:</p>
+              <p className="text-sm font-medium text-foreground">Here is how that applies to every tier:</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
               <div className="rounded-[24px] border border-border bg-card p-6 shadow-sm text-center">
                 <p className="text-xs font-bold text-primary uppercase tracking-widest mb-2">Tier 01 Marketing</p>
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">You earn</p>
-                <p className="text-2xl font-bold text-foreground mb-1">$249</p>
-                <p className="text-sm text-muted-foreground mb-3">upfront</p>
-                <p className="text-lg font-semibold text-foreground">+ $49 <span className="text-sm font-normal text-muted-foreground">/ month</span></p>
+                <p className="text-2xl font-bold text-foreground mb-1">10%</p>
+                <p className="text-sm text-muted-foreground mb-3">of the setup fee, upfront</p>
+                <p className="text-lg font-semibold text-foreground">+ 5% <span className="text-sm font-normal text-muted-foreground">of the retainer / month</span></p>
               </div>
               <div className="rounded-[24px] border-2 border-primary bg-card p-6 shadow-sm text-center ring-2 ring-primary/10">
                 <p className="text-xs font-bold text-primary uppercase tracking-widest mb-2">Tier 02 Growth</p>
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">You earn</p>
-                <p className="text-2xl font-bold text-foreground mb-1">$349</p>
-                <p className="text-sm text-muted-foreground mb-3">upfront</p>
-                <p className="text-lg font-semibold text-foreground">+ $74 <span className="text-sm font-normal text-muted-foreground">/ month</span></p>
+                <p className="text-2xl font-bold text-foreground mb-1">10%</p>
+                <p className="text-sm text-muted-foreground mb-3">of the setup fee, upfront</p>
+                <p className="text-lg font-semibold text-foreground">+ 5% <span className="text-sm font-normal text-muted-foreground">of the retainer / month</span></p>
               </div>
               <div className="rounded-[24px] border border-border bg-card p-6 shadow-sm text-center">
                 <p className="text-xs font-bold text-primary uppercase tracking-widest mb-2">Tier 03 Full System</p>
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">You earn</p>
-                <p className="text-2xl font-bold text-foreground mb-1">$599</p>
-                <p className="text-sm text-muted-foreground mb-3">upfront</p>
-                <p className="text-lg font-semibold text-foreground">+ $124 <span className="text-sm font-normal text-muted-foreground">/ month</span></p>
+                <p className="text-2xl font-bold text-foreground mb-1">10%</p>
+                <p className="text-sm text-muted-foreground mb-3">of the setup fee, upfront</p>
+                <p className="text-lg font-semibold text-foreground">+ 5% <span className="text-sm font-normal text-muted-foreground">of the retainer / month</span></p>
               </div>
             </div>
 
             <div className="rounded-[24px] border border-primary/20 bg-primary/5 p-6 sm:p-8 text-center">
               <p className="text-base sm:text-lg text-foreground font-medium leading-relaxed">
-                Refer just four Tier 03 clients a year, and you build an extra <strong className="text-primary">$496</strong> in passive monthly recurring revenue, plus <strong className="text-primary">$2,396</strong> in upfront cash bonuses.
+                Every client you refer earns you <strong className="text-primary">10% of their setup fee</strong> upfront, plus <strong className="text-primary">5% of their monthly retainer</strong> for as long as they stay active. No caps on referrals.
               </p>
             </div>
           </div>

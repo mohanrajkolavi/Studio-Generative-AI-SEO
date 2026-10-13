@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 
 export const metadata = getPageMetadata({
   title: "About Us - Built Different From Day One",
-  description: "Learn about Kolavi Studio, our mission to help med spas grow with Next.js websites, AI-powered SEO, and an obsessive attention to detail.",
+  description: "Learn about Kolavi Studio, the AI-native growth agency helping businesses grow with Next.js websites, AI-powered SEO, and obsessive attention to detail.",
   path: "/about",
-  keywords: "med spa marketing agency, about Kolavi Studio, medical spa digital marketing, growth team",
+  keywords: "AI-native growth agency, about Kolavi Studio, digital marketing agency, growth team",
 });
 
 const values = [
@@ -30,15 +30,15 @@ const values = [
   },
   {
     icon: Target,
-    title: "Med Spa Exclusive",
+    title: "Built to Stand Out",
     description:
-      "We do not serve other industries. We do not want to. Every template, every automation, every content strategy is built specifically for medical spas. Botox. Fillers. Body contouring. Laser treatments. GLP-1. We know the business because we chose to know nothing else.",
+      "We work with businesses that refuse to blend in. Local and service businesses, growing brands, multi-location operators. Every website, every automation, every content strategy is built around your market, your customers, and your goals. No copy-paste playbooks.",
   },
   {
     icon: LineChart,
     title: "Results Over Activity",
     description:
-      "We do not measure success by how many blog posts we published or how many emails we sent. We measure it by patient bookings, revenue growth, and cost per acquisition. If a deliverable does not move a business metric, we kill it and replace it with something that does.",
+      "We do not measure success by how many blog posts we published or how many emails we sent. We measure it by leads, bookings, revenue growth, and cost per acquisition. If a deliverable does not move a business metric, we kill it and replace it with something that does.",
   },
 ];
 
@@ -63,7 +63,7 @@ export default function AboutPage() {
           </h1>
 
           <p className="text-body text-muted-foreground max-w-[650px] mx-auto text-balance mb-12">
-            Founded in 2026. Purpose-built for medical spas. Obsessed with performance, design, and results.
+            Founded in 2026. Built for businesses that refuse to blend in. Obsessed with performance, design, and results.
           </p>
         </div>
       </section>
@@ -80,10 +80,10 @@ export default function AboutPage() {
             </h2>
             <div className="space-y-8 text-body text-muted-foreground leading-relaxed text-[18px]">
               <p>
-                Kolavi Studio was founded in 2026 with a single conviction: the med spa marketing industry is stuck in 2015. Agencies charging premium retainers for slow WordPress templates, two generic blog posts a month, and automated dashboards that nobody checks.
+                Kolavi Studio was founded in 2026 with a single conviction: the marketing agency industry is stuck in 2015. Agencies charging premium retainers for slow WordPress templates, two generic blog posts a month, and automated dashboards that nobody checks.
               </p>
               <p>
-                We asked an entirely different question. What would a med spa agency look like if it were built today? From scratch. With modern software engineering. With AI-native workflows. And with an obsessive attention to detail that most agencies do not even aspire to.
+                We asked an entirely different question. What would a growth agency look like if it were built today? From scratch. With modern software engineering. With AI-native workflows. And with an obsessive attention to detail that most agencies do not even aspire to.
               </p>
               <p className="text-xl font-medium text-foreground border-l-2 border-primary pl-6 py-2">
                 The answer is Kolavi.

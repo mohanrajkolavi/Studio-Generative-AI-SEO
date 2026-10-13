@@ -207,7 +207,7 @@ export function SpeedAuditForm() {
                 </div>
                 
                 <p className="text-[14px] text-muted-foreground leading-relaxed pt-4 mt-auto">
-                  <span className="font-semibold text-foreground">Recommendation:</span> Missing technical tags or schema markup prevents Google from understanding and ranking your med spa services effectively in local search.
+                  <span className="font-semibold text-foreground">Recommendation:</span> Missing technical tags or schema markup prevents Google from understanding and ranking your services effectively in local search.
                 </p>
               </div>
             ) : (
@@ -255,11 +255,11 @@ export function SpeedAuditForm() {
             </div>
             <div className="space-y-2">
               <label htmlFor="spaName" className="text-[14px] font-semibold text-foreground">
-                Med Spa Name <span className="text-red-500">*</span>
+                Business Name <span className="text-red-500">*</span>
               </label>
               <Input
                 id="spaName"
-                placeholder="Luxe Aesthetics"
+                placeholder="Acme Studio"
                 value={spaName}
                 onChange={(e) => setSpaName(e.target.value)}
                 required
@@ -277,7 +277,7 @@ export function SpeedAuditForm() {
               <Input
                 id="email"
                 type="email"
-                placeholder="john@luxeaesthetics.com"
+                placeholder="john@acmestudio.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -309,7 +309,7 @@ export function SpeedAuditForm() {
             <Input
               id="url"
               type="url"
-              placeholder="https://luxeaesthetics.com"
+              placeholder="https://acmestudio.com"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               required
