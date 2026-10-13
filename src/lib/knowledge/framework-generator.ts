@@ -119,7 +119,7 @@ ${insights.map((i, idx) => `Insight ${idx + 1} (${i.type}): ${i.headline}\nExpla
 Synthesize these into a master Framework.`;
 
     const callLLM = async (system: string) => {
-        const result = await callClaudeJson(system, userPrompt, { temperature: 0.3 });
+        const result = await callClaudeJson(system, userPrompt);
         const content = result.content;
         if (!content) throw new Error("synthesizeProprietaryFramework: empty response from Claude");
 

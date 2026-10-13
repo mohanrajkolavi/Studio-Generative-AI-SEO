@@ -25,6 +25,15 @@ import {
 } from "@/lib/openai/client";
 
 import type { OutlineSection } from "@/lib/pipeline/types";
+import {
+  CLAUDE_OPUS_MODEL,
+  CLAUDE_SONNET_MODEL,
+  DRAFT_MODEL_IDS,
+  THINKING_HEADROOM_TOKENS,
+  claudeRequestOptions,
+  getResponseText,
+  type DraftModel,
+} from "@/lib/ai/models";
 
 /** Use shared singleton — no duplicate Anthropic instances. */
 const getAnthropicClient = getSharedAnthropicClient;
@@ -245,17 +254,6 @@ function buildSystemPrompt(voice?: VoicePresetId, customVoiceDescription?: strin
   return `${SYSTEM_PROMPT_PREAMBLE}\n\n${voiceSection}\n\n${SYSTEM_PROMPT_POSTAMBLE}`;
 }
 
-/** Get the draft temperature for a voice preset (fallback 0.5). */
-function getVoiceTemperature(voice?: VoicePresetId): number {
-  const preset = getVoicePreset(voice);
-  return preset?.temperature ?? 0.5;
-}
-
-/** Get the humanize temperature for a voice preset (fallback 0.6). */
-function getHumanizeTemperature(voice?: VoicePresetId): number {
-  const preset = getVoicePreset(voice);
-  return preset?.humanizeTemperature ?? 0.6;
-}
 
 /** Backward-compatible SYSTEM_PROMPT for callers that don't pass voice. */
 const SYSTEM_PROMPT = buildSystemPrompt(DEFAULT_VOICE_PRESET_ID);
@@ -535,17 +533,14 @@ function getClaudeUsage(
   return { promptTokens: typeof input === "number" ? input : 0, completionTokens: output };
 }
 
-/** Map UI draft model to Anthropic model ID. Step 4 — Draft. */
-const DRAFT_MODEL_IDS: Record<string, string> = {
-  "opus-4.6": "claude-opus-4-6",
-  "sonnet-4.6": "claude-sonnet-4-6",
-};
-
 /** Default Claude model for fixHallucinations and other non-draft flows. */
-const CLAUDE_DEFAULT_MODEL = "claude-sonnet-4-6";
+const CLAUDE_DEFAULT_MODEL = CLAUDE_SONNET_MODEL;
 
-/** Opus model for high-stakes generation (brief, title/meta, section regen). */
-const CLAUDE_OPUS_MODEL = "claude-opus-4-6";
+/** The response's text as a text block; Claude 5 responses can start with thinking blocks. */
+function textBlock(message: Parameters<typeof getResponseText>[0]): { type: "text"; text: string } | undefined {
+  const text = getResponseText(message);
+  return text === null ? undefined : { type: "text", text };
+}
 
 /**
  * Step 4 — Draft: write full article from brief (and outline overrides). Claude Sonnet 4.6 or Opus 4.6.
@@ -555,7 +550,7 @@ export async function writeDraft(
   brief: ResearchBrief,
   titleMetaSlug: TitleMetaSlugOption,
   tokenUsage?: TokenUsageRecord[],
-  draftModel: "opus-4.6" | "sonnet-4.6" = "opus-4.6",
+  draftModel: DraftModel = "opus",
   fieldNotes?: string,
   toneExamples?: string,
   voice?: VoicePresetId,
@@ -731,12 +726,11 @@ The content MUST end with a References section (after FAQ) listing all inline ci
 
   const modelId = DRAFT_MODEL_IDS[draftModel] ?? CLAUDE_DEFAULT_MODEL;
   const systemPrompt = buildSystemPrompt(voice, customVoiceDescription);
-  const draftTemperature = voice ? getVoiceTemperature(voice) : ((intent === "informational" || intent === "commercial") ? 0.35 : 0.5);
   const writeDraftStartMs = Date.now();
-  const stream = anthropic.messages.stream({
+  const stream = anthropic.beta.messages.stream({
     model: modelId,
-    max_tokens: 32000,
-    temperature: draftTemperature,
+    max_tokens: 32000 + THINKING_HEADROOM_TOKENS,
+    ...claudeRequestOptions(modelId, "medium"),
     system: [{ type: "text" as const, text: systemPrompt, cache_control: { type: "ephemeral" as const } }],
     messages: [{ role: "user", content: userPrompt }],
   });
@@ -760,7 +754,7 @@ The content MUST end with a References section (after FAQ) listing all inline ci
     console.warn("[claude] writeDraft response TRUNCATED at max_tokens — output may be incomplete");
   }
 
-  const content = message.content?.[0];
+  const content = textBlock(message);
   if (!content || content.type !== "text") {
     throw new Error("Claude writeDraft returned an empty or non-text response");
   }
@@ -811,7 +805,7 @@ export async function writeDraftSection(
   section: OutlineSection,
   previousContent: string,
   tokenUsage?: TokenUsageRecord[],
-  draftModel: "opus-4.6" | "sonnet-4.6" = "opus-4.6",
+  draftModel: DraftModel = "opus",
   fieldNotes?: string,
   toneExamples?: string,
   redditQuotes?: string[],
@@ -969,13 +963,12 @@ Return ONLY valid JSON. No H2 tag for the section title. All sub-headings must u
 
   const modelId = DRAFT_MODEL_IDS[draftModel] ?? CLAUDE_DEFAULT_MODEL;
   const sectionSystemPrompt = buildSystemPrompt(voice, customVoiceDescription);
-  const sectionTemperature = voice ? getVoiceTemperature(voice) : ((intent === "informational" || intent === "commercial") ? 0.35 : 0.5);
   const startMs = Date.now();
 
-  const stream = anthropic.messages.stream({
+  const stream = anthropic.beta.messages.stream({
     model: modelId,
-    max_tokens: 8192,
-    temperature: sectionTemperature,
+    max_tokens: 8192 + THINKING_HEADROOM_TOKENS,
+    ...claudeRequestOptions(modelId, "medium"),
     system: [{ type: "text" as const, text: sectionSystemPrompt, cache_control: { type: "ephemeral" as const } }],
     messages: [{ role: "user", content: userPrompt }],
   });
@@ -1000,7 +993,7 @@ Return ONLY valid JSON. No H2 tag for the section title. All sub-headings must u
     console.warn("[writeDraftSection] Response TRUNCATED at max_tokens — will attempt partial recovery");
   }
 
-  const contentBlock = message.content?.[0];
+  const contentBlock = textBlock(message);
   if (!contentBlock || contentBlock.type !== "text") {
     throw new Error("Claude writeDraftSection returned an empty or non-text response");
   }
@@ -1115,11 +1108,10 @@ RULES:
 DRAFT HTML TO HUMANIZE:
 ${draftHtml}`;
 
-  const humanizeTemp = getHumanizeTemperature(voice);
-  const stream = anthropic.messages.stream({
+  const stream = anthropic.beta.messages.stream({
     model: CLAUDE_DEFAULT_MODEL,
-    max_tokens: 32000,
-    temperature: humanizeTemp,
+    max_tokens: 32000 + THINKING_HEADROOM_TOKENS,
+    ...claudeRequestOptions(CLAUDE_DEFAULT_MODEL, "medium"),
     system: [{ type: "text" as const, text: system, cache_control: { type: "ephemeral" as const } }],
     messages: [{ role: "user", content: userMessage }],
   });
@@ -1138,7 +1130,7 @@ ${draftHtml}`;
     });
   }
 
-  const contentBlock = message.content?.[0];
+  const contentBlock = textBlock(message);
   if (!contentBlock || contentBlock.type !== "text") return draftHtml;
 
   let html = contentBlock.text.trim();
@@ -1171,7 +1163,7 @@ export async function generateTitleMetaSlugFromContent(
   intent: string,
   content: string,
   tokenUsage?: TokenUsageRecord[],
-  draftModel: "opus-4.6" | "sonnet-4.6" = "opus-4.6"
+  draftModel: DraftModel = "opus"
 ): Promise<TitleMetaSlugResult> {
   const anthropic = getAnthropicClient();
   const modelId = DRAFT_MODEL_IDS[draftModel] ?? CLAUDE_DEFAULT_MODEL;
@@ -1225,10 +1217,10 @@ ${fullExcerpt}
 
 Generate two distinct meta options. Return JSON only.`;
 
-  const stream = anthropic.messages.stream({
+  const stream = anthropic.beta.messages.stream({
     model: modelId,
-    max_tokens: 4096,
-    temperature: 0.25,
+    max_tokens: 4096 + THINKING_HEADROOM_TOKENS,
+    ...claudeRequestOptions(modelId, "low"),
     system: [{ type: "text" as const, text: systemPrompt, cache_control: { type: "ephemeral" as const } }],
     messages: [{ role: "user", content: userMessage }],
   });
@@ -1247,8 +1239,8 @@ Generate two distinct meta options. Return JSON only.`;
     });
   }
 
-  const contentBlock = message.content[0];
-  if (contentBlock.type !== "text") {
+  const contentBlock = textBlock(message);
+  if (!contentBlock || contentBlock.type !== "text") {
     throw new Error("generateTitleMetaSlugFromContent: Claude returned non-text response");
   }
   const rawContent = contentBlock.text;
@@ -1304,10 +1296,10 @@ Each title must accurately reflect the article content. No exaggeration. Rate CT
 Return valid JSON only:
 { "titles": [ { "title": "...", "approach": "...", "ctrSignal": "High" } ] }`;
 
-  const stream = anthropic.messages.stream({
+  const stream = anthropic.beta.messages.stream({
     model: CLAUDE_DEFAULT_MODEL,
-    max_tokens: 1024,
-    temperature: 0.7,
+    max_tokens: 1024 + THINKING_HEADROOM_TOKENS,
+    ...claudeRequestOptions(CLAUDE_DEFAULT_MODEL, "low"),
     system: [{ type: "text" as const, text: systemPrompt, cache_control: { type: "ephemeral" as const } }],
     messages: [{ role: "user", content: `Keyword: ${primaryKeyword}\n\nContent Excerpt:\n${contentExcerpt.slice(0, 3000)}` }],
   });
@@ -1325,7 +1317,7 @@ Return valid JSON only:
   });
 
   try {
-    let raw = (message.content[0] as { type: "text"; text: string }).text;
+    let raw = (textBlock(message)?.text ?? "");
     raw = stripJsonFromResponse(raw);
     const parsed = JSON.parse(raw);
     if (!parsed.titles || !Array.isArray(parsed.titles)) return [];
@@ -1411,11 +1403,11 @@ ${draftHtml}`;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), HALLUCINATION_FIX_TIMEOUT_MS);
   try {
-    const stream = anthropic.messages.stream(
+    const stream = anthropic.beta.messages.stream(
       {
         model: CLAUDE_DEFAULT_MODEL,
-        max_tokens: 16384,
-        temperature: 0.1,
+        max_tokens: 16384 + THINKING_HEADROOM_TOKENS,
+        ...claudeRequestOptions(CLAUDE_DEFAULT_MODEL, "low"),
         system: HALLUCINATION_FIX_SYSTEM,
         messages: [{ role: "user", content: userContent }],
       },
@@ -1434,8 +1426,8 @@ ${draftHtml}`;
         durationMs: fixDurationMs,
       });
     }
-    const content = message.content[0];
-    if (content.type !== "text") {
+    const content = textBlock(message);
+    if (!content || content.type !== "text") {
       return { fixedHtml: draftHtml, fixes: [] };
     }
     const text = content.text.trim();
@@ -1532,11 +1524,11 @@ Return ONLY the raw fixed HTML. No markdown blocks, no JSON wrapper, no explanat
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), AUDIT_FIX_TIMEOUT_MS);
   try {
-  const stream = anthropic.messages.stream(
+  const stream = anthropic.beta.messages.stream(
     {
     model: CLAUDE_DEFAULT_MODEL,
-    max_tokens: 32000,
-    temperature: 0.2,
+    max_tokens: 32000 + THINKING_HEADROOM_TOKENS,
+    ...claudeRequestOptions(CLAUDE_DEFAULT_MODEL, "medium"),
     system: [{ type: "text" as const, text: system, cache_control: { type: "ephemeral" as const } }],
     messages: [{ role: "user", content: draftHtml }],
     },
@@ -1555,7 +1547,7 @@ Return ONLY the raw fixed HTML. No markdown blocks, no JSON wrapper, no explanat
     durationMs,
   });
 
-  const contentBlock = message.content?.[0];
+  const contentBlock = textBlock(message);
   if (!contentBlock || contentBlock.type !== "text") return draftHtml;
 
   let html = contentBlock.text.trim();
@@ -1682,10 +1674,10 @@ ${internalLinksBlock}
 Return ONLY the complete section HTML including the H2 tag. No markdown wrapping, no explanation, no content from other sections.`;
 
   const startMs = Date.now();
-  const stream = anthropic.messages.stream({
+  const stream = anthropic.beta.messages.stream({
     model: CLAUDE_OPUS_MODEL,
-    max_tokens: 4000,
-    temperature: 0.35,
+    max_tokens: 4000 + THINKING_HEADROOM_TOKENS,
+    ...claudeRequestOptions(CLAUDE_OPUS_MODEL, "medium"),
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
@@ -1702,7 +1694,7 @@ Return ONLY the complete section HTML including the H2 tag. No markdown wrapping
     durationMs,
   });
 
-  const contentBlock = message.content?.[0];
+  const contentBlock = textBlock(message);
   if (!contentBlock || contentBlock.type !== "text") {
     return { updatedHtml: fullArticleHtml, sectionHtml: section };
   }
@@ -1811,10 +1803,10 @@ ${internalLinksBlock}
 Return ONLY the complete article HTML. No markdown wrapping, no explanation.`;
 
   const startMs = Date.now();
-  const stream = anthropic.messages.stream({
+  const stream = anthropic.beta.messages.stream({
     model: CLAUDE_OPUS_MODEL,
-    max_tokens: 32000,
-    temperature: 0.35,
+    max_tokens: 32000 + THINKING_HEADROOM_TOKENS,
+    ...claudeRequestOptions(CLAUDE_OPUS_MODEL, "medium"),
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: userPrompt }],
   });
@@ -1831,7 +1823,7 @@ Return ONLY the complete article HTML. No markdown wrapping, no explanation.`;
     durationMs,
   });
 
-  const contentBlock = message.content?.[0];
+  const contentBlock = textBlock(message);
   if (!contentBlock || contentBlock.type !== "text") {
     return { updatedHtml: fullArticleHtml };
   }
@@ -1975,10 +1967,10 @@ ${extractionContext}
 Apply the user's changes to the existing brief. Return the complete revised brief JSON.`;
 
   const startMs = Date.now();
-  const stream = anthropic.messages.stream({
+  const stream = anthropic.beta.messages.stream({
     model: CLAUDE_OPUS_MODEL,
-    max_tokens: 8192,
-    temperature: 0.15,
+    max_tokens: 8192 + THINKING_HEADROOM_TOKENS,
+    ...claudeRequestOptions(CLAUDE_OPUS_MODEL, "medium"),
     system: systemPrompt,
     messages: [{ role: "user", content: userPrompt }],
   });
@@ -1997,7 +1989,7 @@ Apply the user's changes to the existing brief. Return the complete revised brie
     });
   }
 
-  const contentBlock = message.content[0];
+  const contentBlock = textBlock(message);
   if (!contentBlock || contentBlock.type !== "text") {
     throw new Error("reviseBrief: Claude returned non-text response");
   }
@@ -2223,10 +2215,10 @@ Required keys: keyword, outline, gaps, editorialStyle, editorialStyleFallback, g
     const userPrompt = attempt === 2 ? userPromptBase + bestVersionHint : userPromptBase;
     try {
       const briefStartMs = Date.now();
-      const stream = anthropic.messages.stream({
+      const stream = anthropic.beta.messages.stream({
         model: CLAUDE_OPUS_MODEL,
-        max_tokens: 8192,
-        temperature: 0.1,
+        max_tokens: 8192 + THINKING_HEADROOM_TOKENS,
+        ...claudeRequestOptions(CLAUDE_OPUS_MODEL, "medium"),
         system: systemPrompt,
         messages: [{ role: "user", content: userPrompt }],
       });
@@ -2245,7 +2237,7 @@ Required keys: keyword, outline, gaps, editorialStyle, editorialStyleFallback, g
         });
       }
 
-      const contentBlock = message.content[0];
+      const contentBlock = textBlock(message);
       if (!contentBlock || contentBlock.type !== "text") {
         throw new Error("buildResearchBrief: Claude returned non-text response");
       }

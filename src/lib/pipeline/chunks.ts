@@ -58,6 +58,7 @@ import { extractEntities, detectEntityGaps, scoreEntityCoverage, type ExtractedE
 import { analyzeSerpIntelligence, type SerpIntelligenceResult } from "@/lib/seo/serp-intelligence";
 import { analyzeClusterFit, toBriefLinkSuggestions, type ClusterAnalysisResult } from "@/lib/seo/topical-cluster";
 import { scoreContent, type ContentOptimizationResult } from "@/lib/seo/content-optimizer";
+import { DRAFT_MODEL_IDS, modelDisplayName, type DraftModel } from "@/lib/ai/models";
 
 /** Thrown when topic extraction fails after store updates; catch should not re-call store.setChunkFailed/updatePhase. */
 class TopicExtractionError extends Error {
@@ -1260,7 +1261,7 @@ export async function runDraftChunk(
     };
 
     // Step 4 — Draft: Claude Sonnet 4.6 or Opus 4.6 writes article section by section from brief
-    const draftModel = (job.input as PipelineInput).draftModel ?? "sonnet-4.6";
+    const draftModel = (job.input as PipelineInput).draftModel ?? "sonnet";
     const fieldNotes = (job.input as PipelineInput).fieldNotes;
     const toneExamples = (job.input as PipelineInput).toneExamples;
     const voice = (job.input as PipelineInput).voice;
@@ -1592,7 +1593,7 @@ export async function runValidationChunk(
     const primaryKeyword = job.input.primaryKeyword;
     const authorName = job.input.authorName;
     const authorUrl = job.input.authorUrl;
-    const draftModel = job.input.draftModel ?? "opus-4.6";
+    const draftModel = job.input.draftModel ?? "opus";
 
     let finalContent = draft.content;
 
@@ -1872,7 +1873,7 @@ export async function buildPipelineOutputFromChunks(
   const sourceUrls = [...new Set(currentData.facts.map((f: { source: string }) => f.source))];
   const primaryKeyword = job.input.primaryKeyword;
   const authorName = job.input.authorName;
-  const draftModel = job.input.draftModel ?? "opus-4.6";
+  const draftModel = job.input.draftModel ?? "opus";
 
   const expectedH2s = brief.outline.sections.filter((s) => s.level === "h2").map((s) => s.heading.trim());
   const actualH2s = extractH2sFromHtml(draft.content ?? "");
@@ -2088,8 +2089,8 @@ function extractFallbackFacts(competitors: CompetitorArticle[]): CurrentDataFact
 }
 
 /** Generate AI transparency disclosure text. */
-function generateAiDisclosure(draftModel: string, authorName?: string): string {
-  const modelLabel = draftModel === "opus-4.6" ? "Claude Opus 4.6" : "Claude Sonnet 4.6";
+function generateAiDisclosure(draftModel: DraftModel, authorName?: string): string {
+  const modelLabel = modelDisplayName(DRAFT_MODEL_IDS[draftModel]);
   const reviewer = authorName ? `Reviewed by ${authorName}` : "Reviewed by the editorial team";
   const today = new Date().toISOString().split("T")[0];
   return `Researched with automated search tools and drafted with AI assistance (${modelLabel}). Facts verified against primary sources. ${reviewer} on ${today}.`;

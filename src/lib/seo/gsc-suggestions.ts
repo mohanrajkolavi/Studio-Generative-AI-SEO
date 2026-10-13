@@ -166,7 +166,6 @@ ${truncate(contentText, MAX_CONTENT_CHARS)}
 Generate ranked improvement suggestions following the system prompt rules. JSON only, no em dashes.`;
 
   const response = await callClaudeJson(SYSTEM_PROMPT, userPrompt, {
-    temperature: 0.3,
     maxTokens: 4096,
     timeoutMs: 90_000,
   });

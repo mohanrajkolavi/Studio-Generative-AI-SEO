@@ -10,8 +10,9 @@ const RATES: Record<string, { inputPer1k: number; outputPer1k: number; callCost?
   serper: { inputPer1k: 0, outputPer1k: 0, callCost: 0.001 },
   jina: { inputPer1k: 0, outputPer1k: 0, callCost: 0.002 },
   gemini: { inputPer1k: 0.00025, outputPer1k: 0.001 },
-  openai: { inputPer1k: 0.01, outputPer1k: 0.03 },
-  anthropic: { inputPer1k: 0.003, outputPer1k: 0.015 },
+  openai: { inputPer1k: 0.002, outputPer1k: 0.008 },
+  // Per-provider totals don't record the model; priced at Claude Opus 5.5 (most draft tokens).
+  anthropic: { inputPer1k: 0.004, outputPer1k: 0.02 },
 };
 
 export function estimateChunkCostUsd(cost: ChunkCost): number {

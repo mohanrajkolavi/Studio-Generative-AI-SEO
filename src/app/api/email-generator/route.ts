@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSharedAnthropicClient } from "@/lib/anthropic/shared-client";
+import { CLAUDE_HAIKU_MODEL, getResponseText } from "@/lib/ai/models";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { logError } from "@/lib/logging/error";
 
@@ -508,30 +509,57 @@ ${details}
 
 Write ${variantCount} ${cfg.noun} variants for this brief right now. Follow the structure, obey every HARD RULE, spread across the required angles. Output JSON only.`;
 
+    // Structured output mirroring outputShape for this mode.
+    const emailFields = cfg.isSubjectOnly
+      ? ["subject", "preview", "style"]
+      : cfg.isSignature
+        ? ["body", "style"]
+        : ["subject", "preview", "body", "ctaText", ...(includeSignature ? ["signature"] : []), "style"];
+    const emailsSchema = {
+      type: "object",
+      properties: {
+        emails: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: Object.fromEntries(emailFields.map((f) => [f, { type: "string" }])),
+            required: emailFields,
+            additionalProperties: false,
+          },
+        },
+        tip: { type: "string" },
+      },
+      required: ["emails", "tip"],
+      additionalProperties: false,
+    };
+
     const client = getSharedAnthropicClient();
     const message = await client.messages.create(
       {
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 2048,
-        temperature: 0.75,
+        model: CLAUDE_HAIKU_MODEL,
+        max_tokens: 6144, // room for adaptive thinking plus the JSON
+        output_config: { effort: "low", format: { type: "json_schema", schema: emailsSchema } },
         system: systemPrompt,
-        messages: [
-          { role: "user", content: userPrompt },
-          { role: "assistant", content: '{"emails":[' },
-        ],
+        messages: [{ role: "user", content: userPrompt }],
       },
       { timeout: 30_000 }
     );
 
-    const block = message.content?.[0];
-    if (!block || block.type !== "text") {
+    if (message.stop_reason === "refusal") {
+      return NextResponse.json(
+        { error: "The AI could not write this email. Please rephrase the brief and try again." },
+        { status: 422 }
+      );
+    }
+    const text = getResponseText(message);
+    if (!text) {
       return NextResponse.json(
         { error: "AI returned an empty response. Please try again." },
         { status: 500 }
       );
     }
 
-    const rawJson = '{"emails":[' + block.text.replace(/```\s*$/, "").trim();
+    const rawJson = text.replace(/```\s*$/, "").trim();
     let parsed: { emails: RawEmail[]; tip?: string };
     try {
       parsed = JSON.parse(rawJson);

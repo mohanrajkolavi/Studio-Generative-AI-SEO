@@ -435,7 +435,7 @@ export async function runPipeline(
   metrics.startChunk("claude-draft");
   const claudeDraftTokenStart = tokenUsage.length;
   emit("claude-draft", "started", "Writing article draft (this is the longest step)...", 45);
-  const draftModel = input.draftModel ?? "opus-4.6";
+  const draftModel = input.draftModel ?? "opus";
   const draftResult = await withRetry(
     async () => writeDraft(brief, titleMetaSlug, tokenUsage, draftModel, input.fieldNotes, input.toneExamples, input.voice, input.customVoiceDescription),
     { ...RETRY_CLAUDE_DRAFT, timeoutMs: budget.cap(RETRY_CLAUDE_DRAFT.timeoutMs) },

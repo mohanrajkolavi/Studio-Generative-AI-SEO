@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSharedAnthropicClient } from "@/lib/anthropic/shared-client";
+import { CLAUDE_HAIKU_MODEL, getResponseText } from "@/lib/ai/models";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { logError } from "@/lib/logging/error";
 
@@ -308,29 +309,49 @@ ${details}
 
 Write 8 ${latin ? "Latin " : ""}${cfg.pluralNoun} for this brand right now. Follow the HOW TO THINK process, obey every HARD RULE, and spread the 8 across the 8 angles. Output JSON only.`;
 
+    // Structured output mirroring the OUTPUT FORMAT in the system prompt.
+    const versionFields = latin ? ["text", "translation", "style"] : ["text", "style"];
+    const versionsSchema = {
+      type: "object",
+      properties: {
+        versions: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: Object.fromEntries(versionFields.map((f) => [f, { type: "string" }])),
+            required: versionFields,
+            additionalProperties: false,
+          },
+        },
+        tip: { type: "string" },
+      },
+      required: ["versions", "tip"],
+      additionalProperties: false,
+    };
+
     const client = getSharedAnthropicClient();
     const message = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 2048,
-      temperature: 0.9,
+      model: CLAUDE_HAIKU_MODEL,
+      max_tokens: 6144, // room for adaptive thinking plus the JSON
+      output_config: { effort: "low", format: { type: "json_schema", schema: versionsSchema } },
       system: systemPrompt,
-      messages: [
-        { role: "user", content: userPrompt },
-        { role: "assistant", content: '{"versions":[' },
-      ],
+      messages: [{ role: "user", content: userPrompt }],
     }, {
       timeout: 30_000,
     });
 
-    const block = message.content?.[0];
-    if (!block || block.type !== "text") {
+    if (message.stop_reason === "refusal") {
+      return NextResponse.json({ error: `The AI could not write ${cfg.pluralNoun} for this input. Please rephrase and try again.` }, { status: 422 });
+    }
+    const text = getResponseText(message);
+    if (!text) {
       return NextResponse.json({ error: "AI returned an empty response. Please try again." }, { status: 500 });
     }
 
     type RawVersion = { text?: unknown; style?: unknown; translation?: unknown };
     type Version = { text: string; wordCount: number; style: string; translation?: string };
     let parsed: { versions: RawVersion[]; tip?: string };
-    const rawJson = '{"versions":[' + block.text.replace(/```\s*$/, "").trim();
+    const rawJson = text.replace(/```\s*$/, "").trim();
     try {
       parsed = JSON.parse(rawJson);
     } catch {

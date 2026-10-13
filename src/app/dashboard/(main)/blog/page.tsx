@@ -29,6 +29,7 @@ import type {
   SerpFeaturesForUI,
 } from "@/lib/blog/generation-types";
 import { pipelineToGenerated } from "@/lib/blog/generation-types";
+import { DRAFT_MODEL_IDS, modelDisplayName, type DraftModel } from "@/lib/ai/models";
 
 /** Result state shape (matches BlogGenerationProvider). */
 type ResultState = {
@@ -610,7 +611,7 @@ const SAMPLE_INPUT: GenerationInput = {
   keywords: ["medical spa SEO", "aesthetic practice marketing"],
   intent: ["informational"],
   competitorUrls: [],
-  draftModel: "opus-4.6",
+  draftModel: "opus",
 };
 
 const SAMPLE_RESULT: ResultState = {
@@ -787,7 +788,7 @@ export default function BlogMakerPage() {
   /** Selected intents (1 or 2). Word count is auto-calculated in backend from this. */
   const [selectedIntents, setSelectedIntents] = useState<IntentType[]>(["informational"]);
   const [competitorUrls, setCompetitorUrls] = useState<string[]>([]);
-  const [draftModel, setDraftModel] = useState<"opus-4.6" | "sonnet-4.6">("opus-4.6");
+  const [draftModel, setDraftModel] = useState<DraftModel>("opus");
   const [voice, setVoice] = useState<"conversational-expert" | "authoritative-practitioner" | "friendly-guide" | "newsletter-editorial">("authoritative-practitioner");
   const [fieldNotes, setFieldNotes] = useState<string>("");
   const [gscHandoff, setGscHandoff] = useState<RewriterHandoff | null>(null);
@@ -865,7 +866,7 @@ export default function BlogMakerPage() {
     setSecondaryKeywords(SAMPLE_INPUT.keywords.slice(1));
     setSelectedIntents(["informational"]);
     setCompetitorUrls(SAMPLE_INPUT.competitorUrls);
-    setDraftModel(SAMPLE_INPUT.draftModel ?? "opus-4.6");
+    setDraftModel(SAMPLE_INPUT.draftModel ?? "opus");
     lastResearchSerpRef.current = SAMPLE_RESEARCH_SERP;
 
     if (stage === "select") {
@@ -908,7 +909,7 @@ export default function BlogMakerPage() {
       keywords: [],
       intent: [] as string[],
       competitorUrls: [],
-      draftModel: "opus-4.6" as const,
+      draftModel: "opus" as const,
     }),
     []
   );
@@ -3273,8 +3274,8 @@ export default function BlogMakerPage() {
                     <p className="text-xs text-muted-foreground leading-relaxed">The Claude model used to write the article draft.</p>
                     <div className="flex flex-wrap gap-2 pt-1">
                       {([
-                        { value: "opus-4.6", label: "Opus 4.6", badge: "Best quality" },
-                        { value: "sonnet-4.6", label: "Sonnet 4.6", badge: "Faster" },
+                        { value: "opus", label: modelDisplayName(DRAFT_MODEL_IDS.opus).replace("Claude ", ""), badge: "Best quality" },
+                        { value: "sonnet", label: modelDisplayName(DRAFT_MODEL_IDS.sonnet).replace("Claude ", ""), badge: "Faster" },
                       ] as const).map(({ value: model, label, badge }) => (
                         <label
                           key={model}
@@ -3528,7 +3529,7 @@ export default function BlogMakerPage() {
                       setSecondaryKeywords(SAMPLE_INPUT.keywords.slice(1));
                       setSelectedIntents(["informational"]);
                       setCompetitorUrls(SAMPLE_INPUT.competitorUrls);
-                      setDraftModel(SAMPLE_INPUT.draftModel ?? "opus-4.6");
+                      setDraftModel(SAMPLE_INPUT.draftModel ?? "opus");
                       demoDispatch({ type: "START", startedAt: Date.now() });
                       setStepView(null);
                     }}

@@ -4,6 +4,7 @@
  */
 
 import { z } from "zod";
+import { normalizeDraftModel, type DraftModel } from "@/lib/ai/models";
 import type { ArticleAuditResult } from "@/lib/seo/article-audit";
 import type { PipelineRunMetrics, PerformanceSummary } from "@/lib/pipeline/metrics/types";
 import type { VoicePresetId } from "@/lib/constants/voices";
@@ -14,8 +15,8 @@ import type { VoicePresetId } from "@/lib/constants/voices";
 
 export type SearchIntent = "informational" | "commercial" | "transactional" | "navigational";
 
-/** Draft model for Claude writeDraft step. */
-export type DraftModel = "opus-4.6" | "sonnet-4.6";
+/** Draft model for Claude writeDraft step (model IDs live in @/lib/ai/models). */
+export type { DraftModel };
 
 /**
  * Default word count by intent (single or combo). Key = single intent or sorted combo "a,b".
@@ -86,7 +87,8 @@ export const PipelineInputSchema = z.object({
     z.string(),
     z.array(z.string()),
   ]).optional(),
-  draftModel: z.enum(["opus-4.6", "sonnet-4.6"]).optional(),
+  // Legacy "opus-4.6" / "sonnet-4.6" values from saved jobs are normalized.
+  draftModel: z.enum(["opus", "sonnet", "opus-4.6", "sonnet-4.6"]).transform((v) => normalizeDraftModel(v) ?? "opus").optional(),
   autoFixHallucinations: z.boolean().optional(),
   fieldNotes: z.string().optional(),
   toneExamples: z.string().optional(),

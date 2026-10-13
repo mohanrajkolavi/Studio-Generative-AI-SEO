@@ -106,7 +106,7 @@ Return valid JSON with keys: nodes (array of {topic, category, relevanceScore, c
     const userPrompt = `Keyword: ${keyword}\n\n${paaContext}\n\n${redditContext}\n\nCompetitor Content (Truncated):\n${competitorSummaries}`;
 
     const callLLM = async (system: string) => {
-        const result = await callClaudeJson(system, userPrompt, { temperature: 0.2 });
+        const result = await callClaudeJson(system, userPrompt);
         const content = result.content;
         if (!content) throw new Error("buildTopicGraph: empty response from Claude");
 
