@@ -28,6 +28,8 @@ interface SloganVersion {
   text: string;
   wordCount: number;
   style: string;
+  /** English translation, present when a Latin motto was requested. */
+  translation?: string;
 }
 
 interface SloganResult {
@@ -206,6 +208,7 @@ export function SloganGenerator({ defaultMode = "slogan" }: SloganGeneratorProps
   const [length, setLength] = useState<"auto" | "short" | "medium" | "long" | "custom">("auto");
   const [customWords, setCustomWords] = useState(5);
   const [styles, setStyles] = useState<string[]>([]);
+  const [language, setLanguage] = useState<"english" | "latin">("english");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
 
@@ -329,10 +332,21 @@ export function SloganGenerator({ defaultMode = "slogan" }: SloganGeneratorProps
           length,
           customWords: length === "custom" ? customWords : undefined,
           styles,
+          language: mode === "motto" ? language : undefined,
         }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error(
+          res.ok
+            ? "Invalid response from server. Please try again."
+            : `Failed to generate ${meta.label.toLowerCase()}s. Please try again.`
+        );
+      }
       if (!res.ok) throw new Error(data.error || `Failed to generate ${meta.label.toLowerCase()}s`);
 
       setResult(data.slogans);
@@ -340,6 +354,7 @@ export function SloganGenerator({ defaultMode = "slogan" }: SloganGeneratorProps
         mode,
         tone: String(tone),
         styles: styles.join(",") || "auto",
+        language: mode === "motto" ? language : "english",
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
@@ -419,6 +434,11 @@ export function SloganGenerator({ defaultMode = "slogan" }: SloganGeneratorProps
                 <p className="text-[17px] sm:text-[20px] leading-snug font-semibold text-foreground select-all">
                   {v.text}
                 </p>
+                {v.translation && (
+                  <p className="mt-1.5 text-[13px] sm:text-sm text-muted-foreground italic">
+                    {v.translation}
+                  </p>
+                )}
               </div>
             );
           })}
@@ -643,6 +663,36 @@ export function SloganGenerator({ defaultMode = "slogan" }: SloganGeneratorProps
             </div>
           </div>
         </div>
+
+        {mode === "motto" && (
+          <div>
+            <span className="block text-xs sm:text-sm font-medium text-foreground mb-1.5">
+              Language
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {(
+                [
+                  { key: "english", label: "English" },
+                  { key: "latin", label: "Latin (with translation)" },
+                ] as const
+              ).map((opt) => (
+                <button
+                  key={opt.key}
+                  type="button"
+                  aria-pressed={language === opt.key}
+                  onClick={() => setLanguage(opt.key)}
+                  className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm border transition-all duration-200 ${
+                    language === opt.key
+                      ? "border-primary bg-primary/5 text-primary font-medium"
+                      : "border-border bg-background text-muted-foreground hover:border-primary/30"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <button
           type="button"
