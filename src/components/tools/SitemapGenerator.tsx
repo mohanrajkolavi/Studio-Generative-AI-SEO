@@ -116,10 +116,14 @@ export function SitemapGenerator() {
 
   const handleCopyXml = useCallback(async () => {
     if (!results) return;
-    await navigator.clipboard.writeText(results.xml);
-    setCopiedXml(true);
-    setTimeout(() => setCopiedXml(false), 2000);
-    trackEvent("sitemap_generator_copy");
+    try {
+      await navigator.clipboard.writeText(results.xml);
+      setCopiedXml(true);
+      setTimeout(() => setCopiedXml(false), 2000);
+      trackEvent("sitemap_generator_copy");
+    } catch {
+      // Clipboard may be unavailable
+    }
   }, [results]);
 
   const handleDownload = useCallback(() => {
@@ -165,7 +169,17 @@ export function SitemapGenerator() {
         }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error(
+          res.ok
+            ? "Invalid response from server. Please try again."
+            : "Failed to generate sitemap. Please try again."
+        );
+      }
       if (!res.ok) throw new Error(data.error || "Failed to generate sitemap.");
 
       setResults({ xml: data.xml, urls: data.urls, stats: data.stats });

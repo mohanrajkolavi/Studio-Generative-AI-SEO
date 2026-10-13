@@ -25,6 +25,7 @@ export function getOrganizationSchema() {
     sameAs: [
       "https://www.instagram.com/mohanrajkolavi/",
       "https://www.threads.com/@mohanrajkolavi/",
+      "https://www.linkedin.com/in/mohan-kolavi-studio/",
     ],
   };
 }

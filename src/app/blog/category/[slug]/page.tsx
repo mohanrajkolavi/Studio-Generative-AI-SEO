@@ -191,12 +191,12 @@ export default async function CategoryPage({ params }: PageProps) {
                 </p>
               )}
 
-              {/* CTA for Medical Spa Marketing */}
+              {/* CTA for the Medical Spa Marketing category */}
               {slug === "medical-spa-marketing" && (
                 <div className="mt-8 rounded-2xl border border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50 p-6">
                   <p className="text-foreground">
-                    <strong>Need expert help?</strong> Our team specializes in medical spa marketing.{" "}
-                    <Link href="/medical-spas" className="font-semibold text-orange-600 hover:text-orange-700 underline underline-offset-2">
+                    <strong>Need expert help?</strong> Our team builds growth systems for local and service businesses.{" "}
+                    <Link href="/services" className="font-semibold text-orange-600 hover:text-orange-700 underline underline-offset-2">
                       Explore our services →
                     </Link>
                   </p>

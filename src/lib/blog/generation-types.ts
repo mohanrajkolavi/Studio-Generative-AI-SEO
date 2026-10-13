@@ -1,5 +1,7 @@
 /** Shared types for blog generation (dashboard + provider). */
 
+import type { DraftModel } from "@/lib/ai/models";
+
 export type GeneratedContent = {
   title: string;
   metaDescription: string;
@@ -122,7 +124,7 @@ export type GenerationInput = {
   intent: string[];
   competitorUrls: string[];
   /** Draft model: Opus 4.6 or Sonnet 4.6. */
-  draftModel?: "opus-4.6" | "sonnet-4.6";
+  draftModel?: DraftModel;
   /** Voice preset for article tone/style. */
   voice?: "conversational-expert" | "authoritative-practitioner" | "friendly-guide" | "newsletter-editorial" | "custom";
   /** Custom voice description (used when voice === "custom"). */

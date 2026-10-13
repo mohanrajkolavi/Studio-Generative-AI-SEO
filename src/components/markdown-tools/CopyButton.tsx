@@ -27,10 +27,17 @@ export function CopyButton({ content, className, label }: CopyButtonProps) {
       textarea.style.opacity = "0";
       document.body.appendChild(textarea);
       textarea.select();
-      document.execCommand("copy");
+      let ok = false;
+      try {
+        ok = document.execCommand("copy");
+      } catch {
+        // Copy not supported
+      }
       document.body.removeChild(textarea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (ok) {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
     }
   }, [content]);
 

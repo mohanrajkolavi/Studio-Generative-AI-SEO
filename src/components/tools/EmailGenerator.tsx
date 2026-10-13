@@ -294,7 +294,17 @@ export function EmailGenerator() {
         }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error(
+          res.ok
+            ? "Invalid response from server. Please try again."
+            : "Failed to generate emails. Please try again."
+        );
+      }
       if (!res.ok) throw new Error(data.error || "Failed to generate emails");
 
       setResult(data.emails);

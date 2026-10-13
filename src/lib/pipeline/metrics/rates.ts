@@ -17,9 +17,12 @@ export const DEFAULT_PIPELINE_COST_RATES: Record<string, ProviderRate> = {
   serper: { callCost: 0.001 },
   jina: { callCost: 0.002 },
   gemini: { inputPer1k: 0.00025, outputPer1k: 0.001 },
-  "openai-gpt-4.1": { inputPer1k: 0.01, outputPer1k: 0.03 },
-  "openai-gpt-4.1-mini": { inputPer1k: 0.002, outputPer1k: 0.008 },
-  "anthropic-claude-sonnet": { inputPer1k: 0.003, outputPer1k: 0.015 },
+  "openai-gpt-4.1": { inputPer1k: 0.002, outputPer1k: 0.008 },
+  "openai-gpt-4.1-mini": { inputPer1k: 0.0004, outputPer1k: 0.0016 },
+  // Claude 5.5 list prices; thinking tokens are billed as output.
+  "anthropic-claude-opus": { inputPer1k: 0.004, outputPer1k: 0.02 },
+  "anthropic-claude-sonnet": { inputPer1k: 0.002, outputPer1k: 0.01 },
+  "anthropic-claude-haiku": { inputPer1k: 0.0001, outputPer1k: 0.0005 },
 };
 
 let _rates: Record<string, ProviderRate> = { ...DEFAULT_PIPELINE_COST_RATES };
@@ -54,7 +57,8 @@ export function getRateKeyForModel(model: string): string {
   const m = model?.toLowerCase() ?? "";
   if (m.includes("gpt-4.1-mini")) return "openai-gpt-4.1-mini";
   if (m.includes("gpt-4.1") || m.includes("gpt-4")) return "openai-gpt-4.1";
-  if (m.includes("claude-sonnet") || m.includes("claude-3-5-sonnet")) return "anthropic-claude-sonnet";
+  if (m.includes("claude-opus")) return "anthropic-claude-opus";
+  if (m.includes("claude-haiku")) return "anthropic-claude-haiku";
   if (m.includes("claude")) return "anthropic-claude-sonnet";
   return "openai-gpt-4.1"; // fallback
 }

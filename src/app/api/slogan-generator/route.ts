@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSharedAnthropicClient } from "@/lib/anthropic/shared-client";
+import { CLAUDE_HAIKU_MODEL, getResponseText } from "@/lib/ai/models";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { logError } from "@/lib/logging/error";
 
@@ -196,6 +197,9 @@ export async function POST(request: NextRequest) {
       ? Math.min(CUSTOM_WORDS_MAX, Math.max(CUSTOM_WORDS_MIN, Math.round(customWordsRaw)))
       : null;
 
+    // Latin output is only offered for mottos (the classic Latin-motto use case).
+    const latin = mode === "motto" && body.language === "latin";
+
     if (!brandName) {
       return NextResponse.json({ error: "Name is required." }, { status: 400 });
     }
@@ -245,7 +249,21 @@ export async function POST(request: NextRequest) {
     detailParts.push(`Industry rhythm: ${industryRhythm}`);
     detailParts.push(`Tone: ${toneLabel}`);
     detailParts.push(`Length target: ${cfg.wordTarget} per ${cfg.noun}`);
+    if (latin) detailParts.push("Language: classical Latin, with an English translation for each motto");
     const details = detailParts.join("\n");
+
+    const latinRules = latin
+      ? `
+LATIN MODE (overrides any rule above that conflicts):
+- Write every ${cfg.noun} in grammatically correct classical Latin, in the tradition of heraldic and institutional mottos (e.g. Fortis et Liber, Semper Paratus, Per Ardua ad Astra).
+- Use correct case endings, agreement, and word order. Prefer attested vocabulary over invented words. No macrons.
+- The length target counts Latin words.
+- Put a faithful, natural English translation of each motto in "translation".
+- The specificity mandate is relaxed: Latin mottos may express the brief's values rather than literal product details.`
+      : "";
+    const versionShape = latin
+      ? `{"text":"<the Latin ${cfg.noun}>","translation":"<English translation>","style":"<one tag>"}`
+      : `{"text":"<the ${cfg.noun}>","style":"<one tag>"}`;
 
     const systemPrompt = `You are a senior copywriter who has shipped award-winning ${cfg.pluralNoun} for brands that became household names. You do NOT write generic AI slop. Every line you write could appear on a billboard, a jersey, or a pitch deck without embarrassment.
 
@@ -282,37 +300,58 @@ HARD RULES:
 - Read every ${cfg.noun} out loud in your head. If it stumbles, rewrite it.
 
 STYLE TAGS (pick exactly one per variant, matching the angle): punchy, rhyming, alliterative, metaphoric, emotional, witty, aspirational, benefit.
-
+${latinRules}
 OUTPUT FORMAT - JSON only, no prose before or after:
-{"versions":[{"text":"<the ${cfg.noun}>","style":"<one tag>"},...8 total...],"tip":"<one sentence, specific to THIS brand, telling the user what to watch for when choosing their favorite>"}`;
+{"versions":[${versionShape},...8 total...],"tip":"<one sentence, specific to THIS brand, telling the user what to watch for when choosing their favorite>"}`;
 
     const userPrompt = `BRIEF
 ${details}
 
-Write 8 ${cfg.pluralNoun} for this brand right now. Follow the HOW TO THINK process, obey every HARD RULE, and spread the 8 across the 8 angles. Output JSON only.`;
+Write 8 ${latin ? "Latin " : ""}${cfg.pluralNoun} for this brand right now. Follow the HOW TO THINK process, obey every HARD RULE, and spread the 8 across the 8 angles. Output JSON only.`;
+
+    // Structured output mirroring the OUTPUT FORMAT in the system prompt.
+    const versionFields = latin ? ["text", "translation", "style"] : ["text", "style"];
+    const versionsSchema = {
+      type: "object",
+      properties: {
+        versions: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: Object.fromEntries(versionFields.map((f) => [f, { type: "string" }])),
+            required: versionFields,
+            additionalProperties: false,
+          },
+        },
+        tip: { type: "string" },
+      },
+      required: ["versions", "tip"],
+      additionalProperties: false,
+    };
 
     const client = getSharedAnthropicClient();
     const message = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 2048,
-      temperature: 0.9,
+      model: CLAUDE_HAIKU_MODEL,
+      max_tokens: 6144, // room for adaptive thinking plus the JSON
+      output_config: { effort: "low", format: { type: "json_schema", schema: versionsSchema } },
       system: systemPrompt,
-      messages: [
-        { role: "user", content: userPrompt },
-        { role: "assistant", content: '{"versions":[' },
-      ],
+      messages: [{ role: "user", content: userPrompt }],
     }, {
       timeout: 30_000,
     });
 
-    const block = message.content?.[0];
-    if (!block || block.type !== "text") {
+    if (message.stop_reason === "refusal") {
+      return NextResponse.json({ error: `The AI could not write ${cfg.pluralNoun} for this input. Please rephrase and try again.` }, { status: 422 });
+    }
+    const text = getResponseText(message);
+    if (!text) {
       return NextResponse.json({ error: "AI returned an empty response. Please try again." }, { status: 500 });
     }
 
-    type RawVersion = { text?: unknown; style?: unknown };
+    type RawVersion = { text?: unknown; style?: unknown; translation?: unknown };
+    type Version = { text: string; wordCount: number; style: string; translation?: string };
     let parsed: { versions: RawVersion[]; tip?: string };
-    const rawJson = '{"versions":[' + block.text.replace(/```\s*$/, "").trim();
+    const rawJson = text.replace(/```\s*$/, "").trim();
     try {
       parsed = JSON.parse(rawJson);
     } catch {
@@ -342,7 +381,7 @@ Write 8 ${cfg.pluralNoun} for this brand right now. Follow the HOW TO THINK proc
 
     const seen = new Set<string>();
     const versions = parsed.versions
-      .map((v): { text: string; wordCount: number; style: string } | null => {
+      .map((v): Version | null => {
         const text = typeof v?.text === "string"
           ? v.text.replace(/\s*\u2014\s*/g, " - ").replace(/\s*\u2013\s*/g, " - ").replace(/["“”]/g, "").trim()
           : "";
@@ -354,9 +393,13 @@ Write 8 ${cfg.pluralNoun} for this brand right now. Follow the HOW TO THINK proc
         seen.add(key);
         const rawStyle = typeof v?.style === "string" ? v.style.toLowerCase().trim() : "";
         const style = VALID_STYLES.has(rawStyle) ? rawStyle : "punchy";
-        return { text, wordCount, style };
+        if (!latin) return { text, wordCount, style };
+        const translation = typeof v?.translation === "string"
+          ? v.translation.replace(/\s*[\u2013\u2014]\s*/g, " - ").replace(/["“”]/g, "").trim().slice(0, 200)
+          : "";
+        return translation ? { text, wordCount, style, translation } : { text, wordCount, style };
       })
-      .filter((v): v is { text: string; wordCount: number; style: string } => v !== null)
+      .filter((v): v is Version => v !== null)
       .slice(0, 10);
 
     if (versions.length === 0) {
@@ -374,7 +417,7 @@ Write 8 ${cfg.pluralNoun} for this brand right now. Follow the HOW TO THINK proc
           VALUES (
             gen_random_uuid(),
             ${brandName},
-            ${`${mode}: ${industry || "n/a"} | ${toneLabel}`},
+            ${`${mode}${latin ? " (latin)" : ""}: ${industry || "n/a"} | ${toneLabel}`},
             ${`${mode}_generator`},
             'new',
             NOW()

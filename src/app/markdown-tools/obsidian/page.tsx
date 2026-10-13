@@ -4,8 +4,9 @@ import { getBreadcrumbSchema } from "@/lib/seo/jsonld/breadcrumb";
 import { getFAQSchema } from "@/lib/seo/jsonld/faq";
 import { getArticleSchema } from "@/lib/seo/jsonld/article";
 import { getHowToSchema } from "@/lib/seo/jsonld/howto";
-import { getSoftwareApplicationSchema } from "@/lib/seo/jsonld/softwareapp";
 import { CopyButton } from "@/components/markdown-tools/CopyButton";
+import { DownloadButton } from "@/components/markdown-tools/DownloadButton";
+import { PrintButton } from "@/components/markdown-tools/PrintButton";
 import { ToolFooter } from "@/components/markdown-tools/ToolFooter";
 
 // ---------------------------------------------------------------------------
@@ -14,18 +15,18 @@ import { ToolFooter } from "@/components/markdown-tools/ToolFooter";
 
 const PAGE_PATH = "/markdown-tools/obsidian";
 const DATE_PUBLISHED = "2026-04-22T00:00:00Z";
-const DATE_MODIFIED = "2026-04-22T00:00:00Z";
-const LAST_UPDATED_LABEL = "Last updated: April 22, 2026";
+const DATE_MODIFIED = "2026-10-13T00:00:00Z";
+const LAST_UPDATED_LABEL = "Last updated: October 13, 2026";
 const AUTHOR_NAME = "Mohan Raj Kolavi";
 const AUTHOR_URL = "/about";
 
 export const metadata = getPageMetadata({
-  title: "Obsidian Markdown: Complete Syntax Guide + Cheat Sheet (2026)",
+  title: "Obsidian Cheat Sheet: Markdown Syntax & Formatting (2026)",
   description:
-    "Obsidian markdown guide: syntax, wiki-links, tables, callouts, a full cheat sheet, and editor tips. Copy every format. Updated 2026.",
+    "Free Obsidian markdown cheat sheet: formatting, wiki-links, callouts, tables, LaTeX math symbols, and keyboard shortcuts. Copy any syntax or save it as a PDF.",
   path: PAGE_PATH,
   keywords:
-    "obsidian markdown, obsidian markdown syntax, obsidian markdown cheat sheet, obsidian markdown guide, obsidian markdown table, obsidian markdown support, does obsidian use markdown, obsidian markdown editor, how to use markdown in obsidian, obsidian markdown features, obsidian flavored markdown, obsidian wiki links, obsidian callouts",
+    "obsidian cheat sheet, obsidian markdown cheat sheet, obsidian formatting cheat sheet, obsidian latex cheat sheet, obsidian math symbols cheat sheet, obsidian shortcuts cheat sheet, obsidian commands cheat sheet, obsidian cheat sheet pdf, obsidian markdown, obsidian markdown syntax, obsidian markdown guide, obsidian markdown table, obsidian markdown support, does obsidian use markdown, obsidian markdown editor, how to use markdown in obsidian, obsidian markdown features, obsidian flavored markdown, obsidian wiki links, obsidian callouts",
   author: AUTHOR_NAME,
   publishedTime: DATE_PUBLISHED,
   modifiedTime: DATE_MODIFIED,
@@ -81,13 +82,81 @@ const cheatSheetRows: {
   { category: "Refs", format: "Footnote", syntax: "Text[^1]\n\n[^1]: Footnote body", renders: "Footnote (reading view)" },
   { category: "Refs", format: "Block reference id", syntax: "A paragraph. ^block-id", renders: "Anchor for linking to a block" },
   { category: "Refs", format: "Tag", syntax: "#project/active", renders: "Nested tag" },
+  { category: "Other", format: "Comment (hidden)", syntax: "%%hidden comment%%", renders: "Not shown in reading view (Obsidian)" },
+  { category: "Other", format: "Underline (HTML)", syntax: "<u>underlined</u>", renders: "Underlined text" },
   { category: "Other", format: "Horizontal rule", syntax: "---", renders: "Divider line" },
   { category: "Other", format: "Escape character", syntax: "\\*not italic\\*", renders: "Literal * symbols" },
 ];
 
-const cheatSheetDownload = cheatSheetRows
-  .map((r) => `## ${r.format}\n\n${r.syntax}\n\nRenders as: ${r.renders}\n`)
-  .join("\n");
+// ---------------------------------------------------------------------------
+// Data: LaTeX / math symbols cheat sheet (MathJax syntax Obsidian renders)
+// ---------------------------------------------------------------------------
+
+const mathRows: { name: string; syntax: string; result: string }[] = [
+  { name: "Inline math", syntax: "$x^2 + y^2 = r^2$", result: "Equation inside a sentence" },
+  { name: "Display (block) math", syntax: "$$\n\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}\n$$", result: "Centered equation on its own line" },
+  { name: "Superscript / subscript", syntax: "$x^{2}$  $a_{ij}$", result: "x², a with subscript ij" },
+  { name: "Fraction", syntax: "$\\frac{a}{b}$", result: "a over b" },
+  { name: "Square / nth root", syntax: "$\\sqrt{x}$  $\\sqrt[3]{x}$", result: "√x, cube root of x" },
+  { name: "Greek letters", syntax: "$\\alpha \\beta \\gamma \\Delta \\pi \\theta \\lambda \\Omega$", result: "α β γ Δ π θ λ Ω" },
+  { name: "Sum and product", syntax: "$\\sum_{i=1}^{n} x_i$  $\\prod_{i=1}^{n} x_i$", result: "Σ and Π with limits" },
+  { name: "Integral", syntax: "$\\int_{a}^{b} f(x)\\,dx$", result: "Definite integral" },
+  { name: "Limit", syntax: "$\\lim_{x \\to \\infty} f(x)$", result: "Limit as x approaches ∞" },
+  { name: "Relations", syntax: "$\\leq \\geq \\neq \\approx \\equiv \\propto$", result: "≤ ≥ ≠ ≈ ≡ ∝" },
+  { name: "Operators", syntax: "$\\times \\div \\pm \\cdot \\infty$", result: "× ÷ ± · ∞" },
+  { name: "Arrows", syntax: "$\\to \\leftarrow \\Rightarrow \\iff$", result: "→ ← ⇒ ⇔" },
+  { name: "Sets and logic", syntax: "$\\in \\notin \\subset \\cup \\cap \\emptyset \\forall \\exists$", result: "∈ ∉ ⊂ ∪ ∩ ∅ ∀ ∃" },
+  { name: "Number sets", syntax: "$\\mathbb{R} \\mathbb{N} \\mathbb{Z} \\mathbb{Q}$", result: "ℝ ℕ ℤ ℚ" },
+  { name: "Vectors and accents", syntax: "$\\vec{v}$  $\\hat{x}$  $\\bar{x}$  $\\dot{x}$", result: "Arrow, hat, bar, dot accents" },
+  { name: "Brackets that scale", syntax: "$\\left( \\frac{a}{b} \\right)$", result: "Parentheses sized to content" },
+  { name: "Matrix", syntax: "$$\n\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\n$$", result: "2 × 2 matrix in square brackets" },
+  { name: "Aligned equations", syntax: "$$\n\\begin{aligned}\na &= b + c \\\\\nd &= e - f\n\\end{aligned}\n$$", result: "Equations aligned on =" },
+  { name: "Piecewise (cases)", syntax: "$$\nf(x) = \\begin{cases} 1 & x > 0 \\\\ 0 & x \\leq 0 \\end{cases}\n$$", result: "Function defined by cases" },
+  { name: "Text inside math", syntax: "$x = 5 \\text{ if } y > 0$", result: "Upright words within an equation" },
+];
+
+// ---------------------------------------------------------------------------
+// Data: keyboard shortcuts / commands (Obsidian default hotkeys)
+// ---------------------------------------------------------------------------
+
+const shortcutRows: { action: string; mac: string; win: string }[] = [
+  { action: "Open command palette", mac: "Cmd + P", win: "Ctrl + P" },
+  { action: "Quick switcher (open any note)", mac: "Cmd + O", win: "Ctrl + O" },
+  { action: "Create new note", mac: "Cmd + N", win: "Ctrl + N" },
+  { action: "Toggle reading / editing view", mac: "Cmd + E", win: "Ctrl + E" },
+  { action: "Search in current file", mac: "Cmd + F", win: "Ctrl + F" },
+  { action: "Find and replace in current file", mac: "Cmd + Option + F", win: "Ctrl + H" },
+  { action: "Search all files in the vault", mac: "Cmd + Shift + F", win: "Ctrl + Shift + F" },
+  { action: "Bold", mac: "Cmd + B", win: "Ctrl + B" },
+  { action: "Italic", mac: "Cmd + I", win: "Ctrl + I" },
+  { action: "Insert markdown link", mac: "Cmd + K", win: "Ctrl + K" },
+  { action: "Toggle checkbox (task)", mac: "Cmd + L", win: "Ctrl + L" },
+  { action: "Toggle comment (%% %%)", mac: "Cmd + /", win: "Ctrl + /" },
+  { action: "Indent / unindent list item", mac: "Tab / Shift + Tab", win: "Tab / Shift + Tab" },
+  { action: "Open graph view", mac: "Cmd + G", win: "Ctrl + G" },
+  { action: "Navigate back / forward", mac: "Cmd + Option + ← / →", win: "Ctrl + Alt + ← / →" },
+  { action: "Open link in new tab", mac: "Cmd + click", win: "Ctrl + click" },
+  { action: "Close current tab", mac: "Cmd + W", win: "Ctrl + W" },
+  { action: "Undo close tab", mac: "Cmd + Shift + T", win: "Ctrl + Shift + T" },
+  { action: "Open settings", mac: "Cmd + ,", win: "Ctrl + ," },
+];
+
+const cheatSheetDownload = [
+  "# Obsidian Markdown Cheat Sheet",
+  "",
+  `Source: https://kolavistudio.com${PAGE_PATH}`,
+  "",
+  "## Markdown syntax",
+  "",
+  ...cheatSheetRows.map((r) => `### ${r.format}\n\n${r.syntax}\n\nRenders as: ${r.renders}\n`),
+  "## LaTeX and math symbols",
+  "",
+  ...mathRows.map((r) => `### ${r.name}\n\n${r.syntax}\n\nRenders as: ${r.result}\n`),
+  "## Keyboard shortcuts (Mac / Windows & Linux)",
+  "",
+  ...shortcutRows.map((r) => `- ${r.action}: ${r.mac} / ${r.win}`),
+  "",
+].join("\n");
 
 // ---------------------------------------------------------------------------
 // Data: support / features matrix
@@ -237,6 +306,16 @@ const faqItems = [
       "Install the Dataview community plugin. Then write a ```dataview code block in any note with a TABLE, LIST, or TASK query. Dataview reads frontmatter and inline fields from every note in your vault and generates a live table that updates when you edit the source notes.",
   },
   {
+    question: "Is there an Obsidian cheat sheet PDF?",
+    answer:
+      "Yes. Use the Print / Save as PDF button on this page and choose Save as PDF in your browser's print dialog to get the full Obsidian cheat sheet, including the LaTeX math and keyboard shortcut tables. You can also download it as an .md file and keep it as a note inside your vault.",
+  },
+  {
+    question: "How do you add a comment in Obsidian?",
+    answer:
+      "Wrap the text in double percent signs: %%this is a comment%%. Comments can span multiple lines and are hidden in reading view but stay in the .md file. Press Cmd + / on Mac or Ctrl + / on Windows and Linux to toggle a comment around the selected text.",
+  },
+  {
     question: "Can Obsidian render LaTeX math?",
     answer:
       "Yes. Obsidian uses MathJax to render LaTeX. Wrap an expression in single dollar signs for inline math ($E = mc^2$) and double dollar signs for block math ($$\\int_0^1 x^2 dx$$). Most standard LaTeX commands work, and you can add custom macros in the editor settings.",
@@ -340,17 +419,6 @@ const howToDataviewQuery = getHowToSchema({
   ],
 });
 
-const softwareAppSchema = getSoftwareApplicationSchema({
-  name: "Obsidian",
-  description:
-    "Local-first knowledge base and markdown note-taking app. Stores every note as a plain .md file on your device. Supports wiki-links, callouts, embeds, and community plugins.",
-  operatingSystem: "Windows, macOS, Linux, iOS, Android",
-  applicationCategory: "ProductivityApplication",
-  url: "https://obsidian.md",
-  offers: { price: "0", currency: "USD" },
-  author: { name: "Obsidian", url: "https://obsidian.md" },
-});
-
 // ---------------------------------------------------------------------------
 // Support cell rendering
 // ---------------------------------------------------------------------------
@@ -425,13 +493,13 @@ export default function ObsidianMarkdownPage() {
   const faqSchema = getFAQSchema(faqItems);
 
   const articleSchema = getArticleSchema({
-    headline: "Obsidian Markdown: The Complete Guide to Syntax, Tables & Cheat Sheet",
+    headline: "Obsidian Markdown Cheat Sheet: Complete Syntax & Formatting Guide",
     description:
       "Obsidian markdown covers CommonMark plus GFM plus Obsidian extensions: wiki-links, callouts, embeds, highlights, block references, and LaTeX math. This guide documents every syntax with copyable examples and a full cheat sheet.",
     datePublished: DATE_PUBLISHED,
     dateModified: DATE_MODIFIED,
     url: PAGE_PATH,
-    wordCount: 3400,
+    wordCount: 3900,
     authorName: AUTHOR_NAME,
     authorUrl: AUTHOR_URL,
   });
@@ -449,10 +517,6 @@ export default function ObsidianMarkdownPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
       />
       <script
         type="application/ld+json"
@@ -488,7 +552,7 @@ export default function ObsidianMarkdownPage() {
         </nav>
 
         <h1 className="text-4xl font-bold tracking-tight mb-3">
-          Obsidian Markdown: The Complete Guide to Syntax, Tables &amp; Cheat Sheet
+          Obsidian Markdown Cheat Sheet: Complete Syntax &amp; Formatting Guide
         </h1>
         <p className="text-sm text-muted-foreground mb-6">
           {LAST_UPDATED_LABEL} &bull; By{" "}
@@ -519,9 +583,11 @@ export default function ObsidianMarkdownPage() {
             On this page
           </p>
           <ol className="grid gap-2 sm:grid-cols-2 text-sm list-decimal list-inside marker:text-muted-foreground">
+            <li><a href="#cheat-sheet" className="text-primary hover:underline">Obsidian Markdown Cheat Sheet</a></li>
+            <li><a href="#latex-math-cheat-sheet" className="text-primary hover:underline">LaTeX &amp; Math Symbols Cheat Sheet</a></li>
+            <li><a href="#shortcuts-cheat-sheet" className="text-primary hover:underline">Keyboard Shortcuts Cheat Sheet</a></li>
             <li><a href="#does-obsidian-support-markdown" className="text-primary hover:underline">Does Obsidian Support Markdown?</a></li>
             <li><a href="#obsidian-markdown-syntax" className="text-primary hover:underline">Obsidian Markdown Syntax</a></li>
-            <li><a href="#cheat-sheet" className="text-primary hover:underline">Obsidian Markdown Cheat Sheet</a></li>
             <li><a href="#support-features" className="text-primary hover:underline">Obsidian Markdown Support Features</a></li>
             <li><a href="#local-files" className="text-primary hover:underline">How Obsidian Stores Notes Locally</a></li>
             <li><a href="#how-to-use" className="text-primary hover:underline">How to Use Markdown in Obsidian</a></li>
@@ -530,6 +596,152 @@ export default function ObsidianMarkdownPage() {
             <li><a href="#faq" className="text-primary hover:underline">Frequently Asked Questions</a></li>
           </ol>
         </nav>
+
+        {/* Cheat sheet first: matches the dominant "obsidian cheat sheet" search intent */}
+        <section id="cheat-sheet" className="mb-12">
+          <h2 className="text-2xl font-semibold mb-3">
+            Obsidian Markdown Cheat Sheet
+          </h2>
+          <p className="text-muted-foreground mb-4">
+            Every Obsidian markdown formatting syntax in one table. Copy any row&apos;s code with the
+            button next to it, download the whole cheat sheet (including the LaTeX and shortcut tables
+            below) as a .md file you can drop into your vault, or save this page as a PDF. For
+            CommonMark-only syntax, see our general-purpose{" "}
+            <Link href="/markdown-cheat-sheet" className="text-primary underline underline-offset-4">
+              markdown cheat sheet
+            </Link>
+            .
+          </p>
+          <div className="mb-4 flex flex-wrap gap-2 print:hidden">
+            <CopyButton content={cheatSheetDownload} label="Copy entire cheat sheet" />
+            <DownloadButton
+              content={cheatSheetDownload}
+              filename="obsidian-cheat-sheet.md"
+              mimeType="text/markdown"
+              label="Download .md"
+            />
+            <PrintButton />
+          </div>
+          <div className="overflow-x-auto rounded-lg border border-border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
+                <tr>
+                  <th className="text-left font-medium p-3 border-b border-border">Category</th>
+                  <th className="text-left font-medium p-3 border-b border-border">Format</th>
+                  <th className="text-left font-medium p-3 border-b border-border">Syntax</th>
+                  <th className="text-left font-medium p-3 border-b border-border">Renders as</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cheatSheetRows.map((row, idx) => (
+                  <tr
+                    key={`${row.category}-${row.format}`}
+                    className={idx < cheatSheetRows.length - 1 ? "border-b border-border" : ""}
+                  >
+                    <td className="p-3 align-top text-muted-foreground whitespace-nowrap">{row.category}</td>
+                    <td className="p-3 align-top font-medium whitespace-nowrap">{row.format}</td>
+                    <td className="p-3 align-top">
+                      <div className="flex items-start gap-2">
+                        <pre className="bg-muted rounded px-2 py-1 text-xs whitespace-pre-wrap break-words flex-1 font-mono">
+                          <code>{row.syntax}</code>
+                        </pre>
+                        <CopyButton content={row.syntax} />
+                      </div>
+                    </td>
+                    <td className="p-3 align-top text-muted-foreground text-sm">{row.renders}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* LaTeX / math symbols cheat sheet */}
+        <section id="latex-math-cheat-sheet" className="mb-12">
+          <h2 className="text-2xl font-semibold mb-3">
+            Obsidian LaTeX &amp; Math Symbols Cheat Sheet
+          </h2>
+          <p className="text-muted-foreground mb-4">
+            Obsidian renders LaTeX with MathJax. Wrap an expression in{" "}
+            <code className="bg-muted px-1.5 py-0.5 rounded text-xs">$...$</code> for inline math or{" "}
+            <code className="bg-muted px-1.5 py-0.5 rounded text-xs">$$...$$</code> for a display block.
+            No plugin is needed. The commands below cover the math symbols people look up most often.
+          </p>
+          <div className="overflow-x-auto rounded-lg border border-border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
+                <tr>
+                  <th className="text-left font-medium p-3 border-b border-border">What</th>
+                  <th className="text-left font-medium p-3 border-b border-border">LaTeX syntax</th>
+                  <th className="text-left font-medium p-3 border-b border-border">Renders as</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mathRows.map((row, idx) => (
+                  <tr
+                    key={row.name}
+                    className={idx < mathRows.length - 1 ? "border-b border-border" : ""}
+                  >
+                    <td className="p-3 align-top font-medium whitespace-nowrap">{row.name}</td>
+                    <td className="p-3 align-top">
+                      <div className="flex items-start gap-2">
+                        <pre className="bg-muted rounded px-2 py-1 text-xs whitespace-pre-wrap break-words flex-1 font-mono">
+                          <code>{row.syntax}</code>
+                        </pre>
+                        <CopyButton content={row.syntax} />
+                      </div>
+                    </td>
+                    <td className="p-3 align-top text-muted-foreground text-sm">{row.result}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-muted-foreground mt-4 text-sm">
+            Want auto-expanding snippets while you type equations? The community plugin Latex Suite adds
+            shortcuts such as typing <code className="bg-muted px-1.5 py-0.5 rounded text-xs">mk</code> to
+            open an inline math block. The syntax above works with or without it.
+          </p>
+        </section>
+
+        {/* Keyboard shortcuts / commands */}
+        <section id="shortcuts-cheat-sheet" className="mb-12">
+          <h2 className="text-2xl font-semibold mb-3">
+            Obsidian Keyboard Shortcuts &amp; Commands Cheat Sheet
+          </h2>
+          <p className="text-muted-foreground mb-4">
+            Obsidian&apos;s default hotkeys. Every command, including ones without a default shortcut, is
+            available from the command palette (<strong>Cmd/Ctrl + P</strong>), and you can rebind any of
+            them in Settings &rarr; Hotkeys.
+          </p>
+          <div className="overflow-x-auto rounded-lg border border-border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
+                <tr>
+                  <th className="text-left font-medium p-3 border-b border-border">Action</th>
+                  <th className="text-left font-medium p-3 border-b border-border">Mac</th>
+                  <th className="text-left font-medium p-3 border-b border-border">Windows / Linux</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shortcutRows.map((row, idx) => (
+                  <tr
+                    key={row.action}
+                    className={idx < shortcutRows.length - 1 ? "border-b border-border" : ""}
+                  >
+                    <td className="p-3 align-top font-medium">{row.action}</td>
+                    <td className="p-3 align-top whitespace-nowrap">
+                      <kbd className="bg-muted rounded px-1.5 py-0.5 text-xs font-mono">{row.mac}</kbd>
+                    </td>
+                    <td className="p-3 align-top whitespace-nowrap">
+                      <kbd className="bg-muted rounded px-1.5 py-0.5 text-xs font-mono">{row.win}</kbd>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
         {/* Section 1: Does Obsidian Support Markdown? */}
         <section id="does-obsidian-support-markdown" className="mb-12">
@@ -552,8 +764,9 @@ export default function ObsidianMarkdownPage() {
           </p>
           <p className="text-muted-foreground">
             In short, Obsidian does not fork markdown. It starts from the standard spec and layers extra
-            syntax on top. Read on for the full syntax reference, a copyable cheat sheet, and a feature
-            matrix that compares CommonMark, GFM, and Obsidian-specific extensions side by side.
+            syntax on top. Use the cheat sheets above for quick lookups, or read on for the full syntax
+            reference and a feature matrix that compares CommonMark, GFM, and Obsidian-specific extensions
+            side by side.
           </p>
         </section>
 
@@ -731,56 +944,6 @@ export default function ObsidianMarkdownPage() {
           <SyntaxBlock
             code={`#project/active #status/in-progress\n\nA quotable paragraph. ^paragraph-1\n\nLink to it: [[This note#^paragraph-1]]`}
           />
-        </section>
-
-        {/* Section 3: Cheat Sheet */}
-        <section id="cheat-sheet" className="mb-12">
-          <h2 className="text-2xl font-semibold mb-3">
-            Obsidian Markdown Cheat Sheet
-          </h2>
-          <p className="text-muted-foreground mb-4">
-            Every Obsidian markdown syntax in one table. Copy any row&apos;s code with the button next to
-            it. For a printable version, use the copy-all button below, or see our general-purpose{" "}
-            <Link href="/markdown-cheat-sheet" className="text-primary underline underline-offset-4">
-              markdown cheat sheet
-            </Link>
-            .
-          </p>
-          <div className="mb-4 flex gap-2">
-            <CopyButton content={cheatSheetDownload} label="Copy entire cheat sheet" />
-          </div>
-          <div className="overflow-x-auto rounded-lg border border-border">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="text-left font-medium p-3 border-b border-border">Category</th>
-                  <th className="text-left font-medium p-3 border-b border-border">Format</th>
-                  <th className="text-left font-medium p-3 border-b border-border">Syntax</th>
-                  <th className="text-left font-medium p-3 border-b border-border">Renders as</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cheatSheetRows.map((row, idx) => (
-                  <tr
-                    key={`${row.category}-${row.format}`}
-                    className={idx < cheatSheetRows.length - 1 ? "border-b border-border" : ""}
-                  >
-                    <td className="p-3 align-top text-muted-foreground whitespace-nowrap">{row.category}</td>
-                    <td className="p-3 align-top font-medium whitespace-nowrap">{row.format}</td>
-                    <td className="p-3 align-top">
-                      <div className="flex items-start gap-2">
-                        <pre className="bg-muted rounded px-2 py-1 text-xs whitespace-pre-wrap break-words flex-1 font-mono">
-                          <code>{row.syntax}</code>
-                        </pre>
-                        <CopyButton content={row.syntax} />
-                      </div>
-                    </td>
-                    <td className="p-3 align-top text-muted-foreground text-sm">{row.renders}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </section>
 
         {/* Section 4: Support Features matrix */}

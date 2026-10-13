@@ -67,9 +67,13 @@ export function escapeXml(s: string): string {
     .replace(/'/g, "&apos;");
 }
 
-/** ISO 8601 with time component (Bing recommends full timestamps for AI search). */
-function formatDate(d: Date): string {
-  return d.toISOString();
+/**
+ * ISO 8601 with time component (Bing recommends full timestamps for AI search).
+ * Accepts strings too: unstable_cache serializes entries as JSON, so a cache hit
+ * returns lastModified as an ISO string rather than a Date.
+ */
+function formatDate(d: Date | string): string {
+  return (d instanceof Date ? d : new Date(d)).toISOString();
 }
 
 /** Build sitemap index XML (root). Protocol: sitemapindex, &lt;loc&gt; required, &lt;lastmod&gt; W3C Datetime. */
@@ -203,9 +207,10 @@ export function getStaticEntries(): UrlEntry[] {
     };
   });
 
-  // Dynamic markdown tool pages from tools-data.ts
+  // Dynamic markdown tool pages from tools-data.ts. Slugs with a bespoke page
+  // (e.g. /markdown-tools/obsidian) are already in DISCOVERED_ROUTES.
   const toolEntries: UrlEntry[] = MARKDOWN_TOOLS
-    .filter((tool) => !tool.externalPath)
+    .filter((tool) => !tool.externalPath && !DISCOVERED_ROUTES.includes(`/markdown-tools/${tool.slug}`))
     .map((tool) => ({
       path: `/markdown-tools/${tool.slug}`,
       lastModified,

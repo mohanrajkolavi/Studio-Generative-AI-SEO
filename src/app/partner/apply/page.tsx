@@ -97,7 +97,7 @@ export default function PartnerApplyPage() {
       <div className="text-center mb-8">
         <h1 className="text-h2 text-foreground mb-4">Apply to the Partner Program</h1>
         <p className="text-small text-muted-foreground">
-          Refer med spa owners. Earn recurring commissions. Takes 2 minutes to apply.
+          Refer business owners. Earn recurring commissions. Takes 2 minutes to apply.
         </p>
       </div>
 
@@ -215,7 +215,7 @@ export default function PartnerApplyPage() {
                 rows={3}
                 maxLength={500}
                 className="min-h-[72px] rounded-[12px] border border-input bg-background/50 backdrop-blur-sm text-body text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors p-3 resize-none"
-                placeholder="Tell us a bit about your network and how you'd introduce Kolavi to med spa owners."
+                placeholder="Tell us a bit about your network and how you'd introduce Kolavi to business owners."
                 disabled={isSubmitting}
               />
             </div>

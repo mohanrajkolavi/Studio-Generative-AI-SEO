@@ -156,13 +156,11 @@ export function getPostAuthorName(post: WPPost): string {
   return post.author?.node?.name ?? SITE_NAME;
 }
 
-/** Author URL for schema (e.g. /blog/author/slug); fallback to site URL. */
+/** Author URL for schema: the WordPress profile URL, else the site's About page (there are no /blog/author pages). */
 export function getPostAuthorUrl(post: WPPost): string {
   const url = post.author?.node?.url;
   if (url) return url;
-  const slug = post.author?.node?.slug;
-  if (slug) return `${SITE_URL}/blog/author/${slug}`;
-  return SITE_URL;
+  return `${SITE_URL}/about`;
 }
 
 /** Category with posts: from WordPress when URL set, else derived from posts. */

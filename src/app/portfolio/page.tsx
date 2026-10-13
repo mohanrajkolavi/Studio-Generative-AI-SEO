@@ -7,7 +7,7 @@ export const metadata = getPageMetadata({
   title: "Our Portfolio - Documenting Real Results",
   description: "Explore our portfolio of successful digital marketing campaigns and web design projects. Built in public, completely transparent, and relentlessly documented.",
   path: "/portfolio",
-  keywords: "med spa portfolio, medical spa case studies, web design projects, marketing success stories",
+  keywords: "growth agency portfolio, digital marketing case studies, web design projects, marketing success stories",
 });
 
 const projects = [
@@ -37,13 +37,13 @@ const projects = [
   },
   {
     title: "First Client Cohort",
-    category: "Medical Spa Partners",
+    category: "Client Partners",
     description: "Our initial client projects are currently in progress. Every single engagement will be documented here with exact metrics, timelines, and verifiable results. No stock photos. No fabricated stories. Just absolute proof.",
     icon: Clock,
     results: [
       "Real baseline metrics documented",
       "Transparent 90-day growth trajectories",
-      "Verified patient acquisition costs",
+      "Verified customer acquisition costs",
       "Full stack implementation",
     ],
   },
@@ -173,7 +173,7 @@ export default function PortfolioPage() {
             Be One of Our First Success Stories
           </h2>
           <p className="text-body text-muted-foreground mb-12 max-w-2xl mx-auto text-balance">
-            Early clients get our full attention, our absolute best pricing, and a front-row seat to what a modern medical spa agency can actually deliver.
+            Early clients get our full attention, our absolute best pricing, and a front-row seat to what a modern, AI-native growth agency can actually deliver.
           </p>
           <Button
             asChild

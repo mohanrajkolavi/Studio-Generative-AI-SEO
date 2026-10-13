@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Zap, Activity, MapPin, Gauge, Search, Users } from "lucide-react";
 
 export const metadata = getPageMetadata({
-  title: "Free Med Spa SEO & Speed Audit",
+  title: "Free Website SEO & Speed Audit",
   description:
-    "Get a free PageSpeed and SEO audit of your med spa website. See how you compare to competitors and get actionable recommendations.",
+    "Get a free PageSpeed and SEO audit of your business website. See how you compare to competitors and get actionable recommendations.",
   path: "/tools/speed-audit",
-  keywords: "med spa SEO audit, website speed audit, PageSpeed insights, med spa marketing",
+  keywords: "free SEO audit, website speed audit, PageSpeed insights, local SEO audit, small business SEO",
 });
 
 export default function SpeedAuditPage() {
@@ -24,12 +24,12 @@ export default function SpeedAuditPage() {
             <div className="mx-auto max-w-5xl text-center">
               {/* Main heading */}
               <h1 className="text-h1 text-foreground mb-8 text-balance">
-                Find Out What&apos;s Costing You Patients Right Now
+                Find Out What&apos;s Costing You Customers Right Now
               </h1>
 
               {/* Subtitle */}
               <p className="text-[18px] sm:text-[20px] text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed text-balance">
-                Enter your website and we&apos;ll generate an instant performance snapshot of your med spa&apos;s digital presence. PageSpeed, SEO health, local visibility gaps, and critical issues your current agency probably isn&apos;t telling you about.
+                Enter your website and we&apos;ll generate an instant performance snapshot of your business&apos;s digital presence. PageSpeed, SEO health, local visibility gaps, and critical issues your current agency probably isn&apos;t telling you about.
               </p>
 
               <p className="text-[15px] font-medium text-muted-foreground/80 mb-16">
@@ -53,7 +53,7 @@ export default function SpeedAuditPage() {
               WHAT YOU GET
             </div>
             <h2 className="text-h2 text-foreground max-w-2xl mx-auto">
-              A Complete Digital Health Check for Your Med Spa
+              A Complete Digital Health Check for Your Business
             </h2>
           </div>
 
@@ -65,7 +65,7 @@ export default function SpeedAuditPage() {
               </div>
               <h3 className="text-h3 text-foreground mb-4">PageSpeed Analysis</h3>
               <p className="text-body text-muted-foreground">
-                We test your site&apos;s load speed on both mobile and desktop using Google&apos;s own PageSpeed Insights. You&apos;ll see your exact score, what&apos;s slowing you down, and how it compares to the 95+ benchmark we build for our clients. Slow sites lose patients. Most med spa sites score below 60. We&apos;ll show you exactly where yours lands.
+                We test your site&apos;s load speed on both mobile and desktop using Google&apos;s own PageSpeed Insights. You&apos;ll see your exact score, what&apos;s slowing you down, and how it compares to the 95+ benchmark we build for our clients. Slow sites lose customers. We&apos;ll show you exactly where yours lands.
               </p>
             </div>
 
@@ -87,7 +87,7 @@ export default function SpeedAuditPage() {
               </div>
               <h3 className="text-[20px] font-bold text-foreground mb-3">Local SEO Visibility</h3>
               <p className="text-small text-muted-foreground">
-                We check your Google Business Profile optimization, citation consistency across major directories, local pack positioning, and NAP (Name, Address, Phone) accuracy. For med spas, local search is everything. Most agencies ignore it. We audit it first.
+                We check your Google Business Profile optimization, citation consistency across major directories, local pack positioning, and NAP (Name, Address, Phone) accuracy. For local and service businesses, local search is everything. Most agencies ignore it. We audit it first.
               </p>
             </div>
 
@@ -122,7 +122,7 @@ export default function SpeedAuditPage() {
                 <div>
                   <h3 className="text-h3 text-foreground mb-4">Competitor Snapshot</h3>
                   <p className="text-body text-muted-foreground">
-                    We don&apos;t just audit your site in isolation. We compare your digital presence against the top-ranking med spas in your local market. You&apos;ll see where you&apos;re ahead, where you&apos;re behind, and where the biggest opportunities are hiding. This alone makes the audit worth requesting.
+                    We don&apos;t just audit your site in isolation. We compare your digital presence against the top-ranking competitors in your local market. You&apos;ll see where you&apos;re ahead, where you&apos;re behind, and where the biggest opportunities are hiding. This alone makes the audit worth requesting.
                   </p>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export default function SpeedAuditPage() {
 
             {[
               { num: "01", title: "Instant Snapshot", desc: "The moment you submit, we run an automated performance scan on your website. Within seconds, you'll see a basic score preview covering PageSpeed, mobile optimization, and critical technical issues." },
-              { num: "02", title: "Deep Audit (24 hours)", desc: "Within 24 hours, our team layers on a comprehensive manual review: SEO health, local visibility, competitor analysis, and specific recommendations tailored to your med spa's market and services. This is not a generic automated report. It's a real audit with real insights." },
+              { num: "02", title: "Deep Audit (24 hours)", desc: "Within 24 hours, our team layers on a comprehensive manual review: SEO health, local visibility, competitor analysis, and specific recommendations tailored to your market and services. This is not a generic automated report. It's a real audit with real insights." },
               { num: "03", title: "Roadmap Delivery", desc: "You'll receive a complete audit report via email with a prioritized action plan. No sales call required. No strings attached. If you want to discuss the findings, we're available. If you want to implement the roadmap yourself, you're welcome to. The audit is yours either way." }
             ].map((step, i) => (
               <div key={i} className="relative z-10 flex flex-col items-center text-center">
@@ -189,8 +189,8 @@ export default function SpeedAuditPage() {
               <p className="text-small text-muted-foreground">This is not a Trojan horse for a pushy sales call. You get the audit. You get the roadmap. What you do with it is entirely your decision. We earn clients through the quality of our work, not through pressure tactics.</p>
             </div>
             <div className="p-8 rounded-[24px] border border-border bg-card shadow-sm">
-              <h3 className="text-[20px] font-bold text-foreground mb-3">Med Spa Specific</h3>
-              <p className="text-small text-muted-foreground">This isn&apos;t a generic website audit. We evaluate your site specifically through the lens of med spa patient acquisition: treatment page optimization, local search presence, booking flow efficiency, and competitive positioning in the aesthetics market.</p>
+              <h3 className="text-[20px] font-bold text-foreground mb-3">Built for Your Business</h3>
+              <p className="text-small text-muted-foreground">This isn&apos;t a generic website audit. We evaluate your site through the lens of customer acquisition: service page optimization, local search presence, lead and booking flow efficiency, and competitive positioning in your market.</p>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -16,13 +16,19 @@ export function UploadButton({
   label = "Upload",
 }: UploadButtonProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [failed, setFailed] = useState(false);
 
   const handleFileUpload = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
+      setFailed(false);
       const reader = new FileReader();
+      reader.onerror = () => {
+        setFailed(true);
+        setTimeout(() => setFailed(false), 3000);
+      };
       reader.onload = (ev) => {
         const text = ev.target?.result;
         if (typeof text === "string") {
@@ -55,7 +61,7 @@ export function UploadButton({
         aria-label="Upload file"
       >
         <Upload className="h-3.5 w-3.5" />
-        <span>{label}</span>
+        <span aria-live="polite">{failed ? "Upload failed" : label}</span>
       </Button>
     </>
   );

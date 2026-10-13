@@ -10,18 +10,18 @@ import { YamlToolFooter } from "@/components/yaml-tools/YamlToolFooter";
 const PAGE_PATH = "/yaml-tools/multiline-strings";
 const PAGE_URL = "https://kolavistudio.com/yaml-tools/multiline-strings";
 const DATE_PUBLISHED = "2026-04-28T00:00:00Z";
-const DATE_MODIFIED = "2026-04-28T00:00:00Z";
-const LAST_UPDATED_LABEL = "Last updated: April 28, 2026";
+const DATE_MODIFIED = "2026-10-13T00:00:00Z";
+const LAST_UPDATED_LABEL = "Last updated: October 13, 2026";
 const AUTHOR_NAME = "Mohan Raj Kolavi";
 const AUTHOR_URL = "/about";
 
 export const metadata = getPageMetadata({
-  title: "YAML Multiline Strings | Block Scalar | and > Explained (2026)",
+  title: "YAML Multiline Strings: | vs >, |- and |+ Explained (2026)",
   description:
-    "Complete guide to YAML multiline strings. Block scalars (literal | and folded >), chomping indicators (-, +), quoting, and gotchas with copy-ready examples.",
+    "Write a YAML multiline string: literal | keeps newlines, folded > joins lines with spaces, |- strips the final newline, |+ keeps it. Cheat sheet + examples.",
   path: PAGE_PATH,
   keywords:
-    "yaml multiline string, yaml multiline, yaml block scalar, yaml literal block, yaml folded scalar, yaml string newlines, yaml pipe, yaml |, yaml >",
+    "yaml multiline string, yaml multiline, yaml block scalar, yaml literal block scalar, yaml folded block scalar, yaml chomping indicator, yaml |-, yaml |+, yaml string newlines, yaml pipe, yaml |, yaml >",
   author: AUTHOR_NAME,
   publishedTime: DATE_PUBLISHED,
   modifiedTime: DATE_MODIFIED,
@@ -87,7 +87,7 @@ const FAQS = [
   {
     question: "Why is my YAML multiline string not working?",
     answer:
-      "Most often the body of the block scalar is not indented far enough or far enough consistently. Every line of the value must indent past the column of the first character after the | or > indicator. Mixing tabs with spaces also breaks YAML parsing.",
+      "Most often the body of the block scalar is not indented consistently. Every line of the value must be indented further than the key that owns it, and at least as far as the first content line, which sets the block's indentation. Mixing tabs with spaces also breaks YAML parsing.",
   },
   {
     question: "How do I write JSON-style multiline strings in YAML?",
@@ -114,6 +114,15 @@ const FAQS = [
     answer:
       "YAML does not allow tabs for indentation. Inside a block scalar, tabs in the content itself are usually fine, but any line that begins with a tab is rejected by the parser. Use spaces for all leading whitespace.",
   },
+];
+
+const indicatorRows: { indicator: string; name: string; parsed: string }[] = [
+  { indicator: "|", name: "Literal, clip (default)", parsed: '"a\\nb\\n"' },
+  { indicator: "|-", name: "Literal, strip", parsed: '"a\\nb"' },
+  { indicator: "|+", name: "Literal, keep", parsed: '"a\\nb\\n\\n"' },
+  { indicator: ">", name: "Folded, clip (default)", parsed: '"a b\\n"' },
+  { indicator: ">-", name: "Folded, strip", parsed: '"a b"' },
+  { indicator: ">+", name: "Folded, keep", parsed: '"a b\\n\\n"' },
 ];
 
 export default function YamlMultilineStringsPage() {
@@ -217,6 +226,36 @@ export default function YamlMultilineStringsPage() {
           </div>
 
           <div className="prose dark:prose-invert max-w-none">
+            <h2 id="cheat-sheet">Block scalar cheat sheet</h2>
+            <p>
+              Every combination of style and chomping indicator, applied to a
+              two-line value (<code>a</code>, <code>b</code>) followed by one
+              blank line:
+            </p>
+            <div className="not-prose overflow-x-auto rounded-lg border border-border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/50">
+                  <tr>
+                    <th className="text-left font-medium p-3 border-b border-border">Indicator</th>
+                    <th className="text-left font-medium p-3 border-b border-border">Style</th>
+                    <th className="text-left font-medium p-3 border-b border-border">Parsed value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {indicatorRows.map((row, idx) => (
+                    <tr
+                      key={row.indicator}
+                      className={idx < indicatorRows.length - 1 ? "border-b border-border" : ""}
+                    >
+                      <td className="p-3 font-mono">{row.indicator}</td>
+                      <td className="p-3">{row.name}</td>
+                      <td className="p-3 font-mono text-xs">{row.parsed}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
             <h2 id="literal-block">Literal block scalar (|)</h2>
             <p>
               The literal style preserves newlines exactly as you type them. It

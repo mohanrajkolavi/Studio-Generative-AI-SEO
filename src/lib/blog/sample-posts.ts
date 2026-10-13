@@ -23,7 +23,7 @@ export const SAMPLE_POSTS: WPPost[] = [
       <h2>Getting started</h2>
       <p>If you're ready to take your medical spa's online presence to the next level, start with an SEO audit. Identify your top opportunities, fix technical issues, and create a content plan that addresses your ideal client's questions.</p>
       
-      <p>At Kolavi Studio, we specialize in helping medical spas grow through strategic digital marketing. <a href="/contact">Get in touch</a> to learn how we can help.</p>
+      <p>At Kolavi Studio, we help local and service businesses, medical spas included, grow through strategic digital marketing. <a href="/contact">Get in touch</a> to learn how we can help.</p>
     `,
     excerpt: "<p>Discover how strategic SEO can help medical spas attract more high-intent clients and grow their business. Learn the key strategies that drive real results.</p>",
     date: "2024-03-12T10:00:00Z",

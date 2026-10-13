@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getPageMetadata } from "@/lib/seo/metadata";
 import { getBreadcrumbSchema } from "@/lib/seo/jsonld/breadcrumb";
-import { getFAQSchema } from "@/lib/seo/jsonld/faq";
+import { getFAQSchema, type FAQItem } from "@/lib/seo/jsonld/faq";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { CopyButton } from "@/components/markdown-tools/CopyButton";
 import { ToolFooter } from "@/components/markdown-tools/ToolFooter";
 
@@ -57,6 +58,29 @@ const syntaxEntries = [
   },
 ];
 
+const FAQS: FAQItem[] = [
+  {
+    question: "Does Slack use standard markdown?",
+    answer:
+      "No. Slack uses its own formatting syntax called mrkdwn, which differs from standard Markdown in several ways. For example, bold uses a single asterisk (*text*) instead of double asterisks, and links use angle bracket syntax (<url|text>) instead of square brackets.",
+  },
+  {
+    question: "How do you bold text in Slack?",
+    answer:
+      "Wrap your text in single asterisks like *text* to make it bold. This is different from standard Markdown, which uses double asterisks. In Slack, single asterisks always produce bold text.",
+  },
+  {
+    question: "How do you use code blocks in Slack?",
+    answer:
+      "Use a single backtick for inline code (`code`) or triple backticks for a multi-line code block (```code```). Slack code blocks do not support language-specific syntax highlighting.",
+  },
+  {
+    question: "What is mrkdwn?",
+    answer:
+      "mrkdwn is Slack's custom text formatting syntax. It is similar to Markdown but has key differences: single asterisks for bold, single tildes for strikethrough, angle bracket links, and no support for tables, images, or syntax-highlighted code blocks.",
+  },
+];
+
 export default function SlackMarkdownPage() {
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Home", url: "/" },
@@ -64,28 +88,7 @@ export default function SlackMarkdownPage() {
     { name: "Slack Markdown", url: "/slack-markdown" },
   ]);
 
-  const faqSchema = getFAQSchema([
-    {
-      question: "Does Slack use standard markdown?",
-      answer:
-        "No. Slack uses its own formatting syntax called mrkdwn, which differs from standard Markdown in several ways. For example, bold uses a single asterisk (*text*) instead of double asterisks, and links use angle bracket syntax (<url|text>) instead of square brackets.",
-    },
-    {
-      question: "How do you bold text in Slack?",
-      answer:
-        "Wrap your text in single asterisks like *text* to make it bold. This is different from standard Markdown, which uses double asterisks. In Slack, single asterisks always produce bold text.",
-    },
-    {
-      question: "How do you use code blocks in Slack?",
-      answer:
-        "Use a single backtick for inline code (`code`) or triple backticks for a multi-line code block (```code```). Slack code blocks do not support language-specific syntax highlighting.",
-    },
-    {
-      question: "What is mrkdwn?",
-      answer:
-        "mrkdwn is Slack's custom text formatting syntax. It is similar to Markdown but has key differences: single asterisks for bold, single tildes for strikethrough, angle bracket links, and no support for tables, images, or syntax-highlighted code blocks.",
-    },
-  ]);
+  const faqSchema = getFAQSchema(FAQS);
 
   return (
     <>
@@ -215,6 +218,7 @@ export default function SlackMarkdownPage() {
           </div>
         </div>
 
+        <FaqSection items={FAQS} />
         <ToolFooter currentPath="/slack-markdown" />
       </div>
     </>

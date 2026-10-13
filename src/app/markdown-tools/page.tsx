@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getPageMetadata } from "@/lib/seo/metadata";
 import { getBreadcrumbSchema } from "@/lib/seo/jsonld/breadcrumb";
-import { getFAQSchema } from "@/lib/seo/jsonld/faq";
+import { getFAQSchema, type FAQItem } from "@/lib/seo/jsonld/faq";
+import { FaqSection } from "@/components/seo/FaqSection";
 import {
   FileEdit,
   Table,
@@ -135,46 +136,48 @@ function ToolCardItem({ tool }: { tool: ToolCard }) {
   );
 }
 
+const FAQS: FAQItem[] = [
+  {
+    question: "What markdown tools are available?",
+    answer:
+      "We offer a live markdown editor with preview, a visual table generator, a markdown to PDF converter, a markdown to HTML converter, a formatter and beautifier, and a complete cheat sheet. We also provide platform-specific guides for Discord, Slack, and GitHub markdown.",
+  },
+  {
+    question: "Are these markdown tools free?",
+    answer:
+      "Yes. Every tool is completely free to use with no limits, no watermarks, and no premium tiers. You can use them as much as you need without paying anything.",
+  },
+  {
+    question: "Do I need to create an account?",
+    answer:
+      "No. All tools work instantly in your browser with no signup, login, or account required. Just open a tool and start using it right away.",
+  },
+  {
+    question: "Is my data private when using these tools?",
+    answer:
+      "Yes. All processing happens entirely in your browser. Your markdown content is never sent to a server. Auto-saved content is stored in your browser's local storage and stays on your device.",
+  },
+  {
+    question: "What is markdown?",
+    answer:
+      "Markdown is a lightweight markup language that uses plain text formatting syntax. It lets you write structured content using simple characters like asterisks for bold, hashes for headings, and dashes for lists. Markdown is widely used for documentation, README files, blog posts, and notes.",
+  },
+];
+
 export default function MarkdownToolsPage() {
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Home", url: "/" },
     { name: "Markdown Tools", url: "/markdown-tools" },
   ]);
 
-  const faqSchema = getFAQSchema([
-    {
-      question: "What markdown tools are available?",
-      answer:
-        "We offer a live markdown editor with preview, a visual table generator, a markdown to PDF converter, a markdown to HTML converter, a formatter and beautifier, and a complete cheat sheet. We also provide platform-specific guides for Discord, Slack, and GitHub markdown.",
-    },
-    {
-      question: "Are these markdown tools free?",
-      answer:
-        "Yes. Every tool is completely free to use with no limits, no watermarks, and no premium tiers. You can use them as much as you need without paying anything.",
-    },
-    {
-      question: "Do I need to create an account?",
-      answer:
-        "No. All tools work instantly in your browser with no signup, login, or account required. Just open a tool and start using it right away.",
-    },
-    {
-      question: "Is my data private when using these tools?",
-      answer:
-        "Yes. All processing happens entirely in your browser. Your markdown content is never sent to a server. Auto-saved content is stored in your browser's local storage and stays on your device.",
-    },
-    {
-      question: "What is markdown?",
-      answer:
-        "Markdown is a lightweight markup language that uses plain text formatting syntax. It lets you write structured content using simple characters like asterisks for bold, hashes for headings, and dashes for lists. Markdown is widely used for documentation, README files, blog posts, and notes.",
-    },
-  ]);
+  const faqSchema = getFAQSchema(FAQS);
 
   const appSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Free Markdown Tools",
     url: "https://kolavistudio.com/markdown-tools",
-    applicationCategory: "Utility",
+    applicationCategory: "UtilitiesApplication",
     operatingSystem: "Any",
     offers: {
       "@type": "Offer",
@@ -342,6 +345,7 @@ export default function MarkdownToolsPage() {
           </div>
         </section>
 
+        <FaqSection items={FAQS} />
         <ToolFooter currentPath="/markdown-tools" />
       </div>
     </>

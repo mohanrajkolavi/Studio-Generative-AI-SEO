@@ -91,7 +91,7 @@ export default async function ContactPage() {
                         </div>
                         <div className="flex flex-col justify-center min-h-[48px]">
                           <p className="text-[14px] font-semibold text-foreground uppercase tracking-wider mb-1">Email Us</p>
-                          <a href="mailto:hello@kolavistudio.com" className="text-body text-muted-foreground hover:text-primary transition-colors">hello@kolavistudio.com</a>
+                          <a href="mailto:kolavistudio@gmail.com" className="text-body text-muted-foreground hover:text-primary transition-colors">kolavistudio@gmail.com</a>
                         </div>
                       </div>
                       <div className="flex items-start gap-5">

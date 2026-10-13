@@ -10,6 +10,7 @@ import {
   Compass,
   Mail,
   Braces,
+  FileText,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,12 +27,12 @@ type Tool = {
 };
 
 export const metadata = getPageMetadata({
-  title: "Free SEO & Marketing Tools for Med Spas",
+  title: "Free SEO, AI Writing & Developer Tools",
   description:
-    "Free tools to power your SEO strategy: website speed audit, AI bio generator, sitemap generator, slogan generator, and more. No signup required.",
+    "Free tools: SEO and speed audit, sitemap generator, AI bio, email, slogan, and motto generators, plus Markdown and YAML toolkits. No signup required.",
   path: "/tools",
   keywords:
-    "med spa SEO tools, free SEO audit, website speed audit, sitemap generator, bio generator, slogan generator",
+    "free SEO tools, free SEO audit, website speed audit, sitemap generator, bio generator, email generator, slogan generator, motto generator, markdown tools, yaml tools",
 });
 
 const tools: Tool[] = [
@@ -41,7 +42,7 @@ const tools: Tool[] = [
     icon: Zap,
     title: "Free SEO & Speed Audit",
     description:
-      "Get a free PageSpeed and SEO health check. See how your med spa site performs, what’s costing you patients, and how you compare to the 95+ benchmark.",
+      "Get a free PageSpeed and SEO health check. See how your site performs, what’s costing you customers, and how you compare to the 95+ benchmark.",
     cta: "Get Your Free Audit",
     featured: true,
   },
@@ -105,10 +106,20 @@ const tools: Tool[] = [
     icon: Braces,
     title: "YAML Tools",
     description:
-      "Validate, convert, format, and edit YAML in your browser. 12 tools and guides covering Kubernetes, GitHub Actions, Docker Compose, and more. Free, no signup.",
+      "Validate, convert, format, diff, and edit YAML in your browser. 18 tools and guides covering Kubernetes, GitHub Actions, Docker Compose, and more. Free, no signup.",
     cta: "Open YAML Tools",
     featured: false,
     badge: "New",
+  },
+  {
+    id: "markdown-tools",
+    href: "/markdown-tools",
+    icon: FileText,
+    title: "Markdown Tools",
+    description:
+      "Live markdown editor, formatter, table generator, Markdown to HTML and PDF, plus cheat sheets and syntax guides for GitHub, Slack, Discord, and Obsidian.",
+    cta: "Open Markdown Tools",
+    featured: false,
   },
 ];
 
@@ -128,7 +139,7 @@ export default function ToolsPage() {
                 SEO STRATEGY TOOLS
               </div>
               <h1 className="text-h1 text-foreground mb-6 text-balance">
-                Free Tools to Power Your Med Spa SEO
+                Free Tools to Power Your SEO and Content
               </h1>
               <p className="text-[18px] sm:text-[20px] text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">
                 Part of our SEO strategy: use these tools to audit your site, generate bios and sitemaps, and craft taglines. No signup. No credit card. Just data.
@@ -182,7 +193,7 @@ export default function ToolsPage() {
               More Tools for Your SEO Strategy
             </h2>
             <p className="mt-4 text-body text-muted-foreground max-w-xl mx-auto">
-              We add new tools over time. Each one is built to help med spas make better decisions and grow organic traffic.
+              We add new tools over time. Each one is built to help you make better decisions and grow organic traffic.
             </p>
           </div>
 

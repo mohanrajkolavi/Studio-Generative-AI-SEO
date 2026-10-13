@@ -28,10 +28,10 @@ export async function generateMetadata(): Promise<Metadata> {
     const meta = getPageMetadata({
       title: "Blog & Resources – Digital Marketing Insights | Kolavi Studio",
       description:
-        "Expert strategies on SEO, conversion optimization, content marketing, and business growth. Proven tactics and actionable guides for medical spas, service businesses, and brands.",
+        "Expert strategies on SEO, GEO, conversion optimization, and content marketing. Actionable growth guides for local and service businesses and brands.",
       path: "/blog",
       keywords:
-        "digital marketing blog, SEO tips, conversion optimization, content marketing, medical spa marketing, local SEO, web design, business growth",
+        "digital marketing blog, SEO tips, conversion optimization, content marketing, generative engine optimization, local SEO, web design, business growth",
     });
     return {
       ...meta,
@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch (e) {
     console.error("Blog generateMetadata:", e);
     return {
-      title: "Blog | Kolavi Studio",
+      title: "Blog",
       description: "Digital marketing insights and resources.",
     };
   }
@@ -266,7 +266,7 @@ export default async function BlogPage() {
                   Ready to grow your business?
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground">
-                  We help medical spas, service businesses, and brands win online with SEO, design, and strategy.
+                  We help local and service businesses and brands win online with SEO, design, and strategy.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
                   <Link

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UploadButton } from "@/components/markdown-tools/UploadButton";
@@ -59,6 +59,7 @@ export function MarkdownToPdfClient() {
   const [fontSize, setFontSize] = useState<FontSize>("14px");
   const [pageSize, setPageSize] = useState<PageSize>("a4");
   const [generating, setGenerating] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -84,11 +85,15 @@ export function MarkdownToPdfClient() {
     }
   }, [markdown]);
 
-  const renderedHtml = parseMarkdown(markdown, { gfm: true, sanitize: true });
+  const renderedHtml = useMemo(
+    () => parseMarkdown(markdown, { gfm: true, sanitize: true }),
+    [markdown]
+  );
 
   const handleDownload = useCallback(async () => {
     if (!previewRef.current || generating) return;
     setGenerating(true);
+    setPdfError(null);
 
     try {
       const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
@@ -107,7 +112,6 @@ export function MarkdownToPdfClient() {
         backgroundColor: "#ffffff",
       });
 
-      const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
@@ -179,6 +183,7 @@ export function MarkdownToPdfClient() {
       pdf.save("document.pdf");
     } catch (err) {
       console.error("PDF generation failed:", err);
+      setPdfError("PDF generation failed. Please try again.");
     } finally {
       setGenerating(false);
     }
@@ -260,6 +265,12 @@ export function MarkdownToPdfClient() {
           <ShareButton content={markdown} basePath="/markdown-to-pdf" />
         </div>
       </div>
+
+      {pdfError && (
+        <p role="alert" className="mb-4 text-sm text-destructive">
+          {pdfError}
+        </p>
+      )}
 
       {/* Split pane: input and preview at equal height */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:h-[calc(100vh-340px)] lg:min-h-[400px] lg:max-h-[700px]">

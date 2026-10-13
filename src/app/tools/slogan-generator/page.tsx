@@ -33,6 +33,49 @@ export const metadata = getPageMetadata({
     "ai slogan generator, slogan generator, slogan maker, slogan creator, free slogan generator, business slogan generator, ai slogan maker, catchy slogan generator, slogan generator ai, company slogan generator, brand slogan generator",
 });
 
+const FAQ_ITEMS: { q: string; a: string }[] = [
+  {
+    q: "What is a slogan?",
+    a: "A slogan is a short, memorable phrase used in advertising and marketing to promote a brand, product, or idea. Good slogans are 3 to 8 words, easy to remember, and communicate a clear benefit or feeling. Famous examples include Nike's Just Do It, Apple's Think Different, and McDonald's I'm Lovin' It.",
+  },
+  {
+    q: "How does the AI slogan generator work?",
+    a: "Enter your brand name, describe what you do, pick your industry and tone, then click Generate. The AI creates 8 unique slogans instantly, each labeled with a style tag (punchy, rhyming, alliterative, metaphoric, emotional, or witty) and a word count. You can copy any slogan with one click or regenerate to see new options.",
+  },
+  {
+    q: "Is the AI slogan generator really free?",
+    a: "Yes, completely free. No signup, no credit card, no hidden paywall. You can generate up to 8 batches per day (64 slogans total) from a single IP address.",
+  },
+  {
+    q: "How do you write a good slogan?",
+    a: "A good slogan is short (3 to 8 words), specific to your brand, easy to remember, and communicates one clear benefit or feeling. Use techniques like rhyme, alliteration, contrast, or metaphor. Avoid cliches like the best or leading provider. Always test a slogan by reading it aloud: if it does not roll off the tongue, keep iterating.",
+  },
+  {
+    q: "What makes a slogan memorable?",
+    a: "Memorable slogans share a few traits: rhythm (a natural beat when spoken), simplicity (short words, clear meaning), specificity (tied to a real benefit, not generic), and emotional resonance. Techniques like alliteration (Coca-Cola: Open Happiness), rhyme (Beanz Meanz Heinz), and contrast (Apple: Think Different) all make slogans stick.",
+  },
+  {
+    q: "Slogan vs tagline: what is the difference?",
+    a: "A tagline is a persistent brand identifier that stays with the company for years (Nike: Just Do It). A slogan is typically tied to a specific campaign or product and may change over time. Taglines capture brand essence, slogans drive specific messages. This generator supports both modes.",
+  },
+  {
+    q: "Can I use the generated slogan commercially?",
+    a: "Yes, you own the slogans you generate and can use them commercially. Before deploying a slogan publicly, we recommend a trademark search to check that your preferred phrase is not already registered in your industry and territory.",
+  },
+  {
+    q: "Can I customize the tone of the slogans?",
+    a: "Yes. Use the tone slider to choose from five levels: Serious, Professional, Balanced, Playful, or Bold & Witty. You can also target specific audiences and pick up to three style preferences for even finer control.",
+  },
+  {
+    q: "Does the slogan generator work for any industry?",
+    a: "Yes. The generator supports 35+ industries out of the box and will accept any custom industry you type into the field. The AI tailors vocabulary, rhythm, and benefit framing to your specific category.",
+  },
+  {
+    q: "Should I trademark my slogan?",
+    a: "If your slogan becomes central to your brand and you plan to use it consistently in advertising, trademarking it is a smart move. A trademark prevents competitors from using a confusingly similar phrase in your category. Taglines are more commonly trademarked than campaign-specific slogans.",
+  },
+];
+
 /** JSON-LD SoftwareApplication + FAQPage schema for rich results. */
 function SloganGeneratorSchema() {
   const base = SITE_URL ?? "https://kolavistudio.com";
@@ -51,7 +94,7 @@ function SloganGeneratorSchema() {
       "@type": "SoftwareApplication",
       name: "AI Slogan Generator",
       url: `${base}/tools/slogan-generator`,
-      applicationCategory: "UtilityApplication",
+      applicationCategory: "UtilitiesApplication",
       operatingSystem: "Web",
       offers: {
         "@type": "Offer",
@@ -72,88 +115,11 @@ function SloganGeneratorSchema() {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "What is a slogan?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A slogan is a short, memorable phrase used in advertising and marketing to promote a brand, product, or idea. Good slogans are 3 to 8 words, easy to remember, and communicate a clear benefit or feeling. Famous examples include Nike's Just Do It, Apple's Think Different, and McDonald's I'm Lovin' It.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does the AI slogan generator work?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Enter your brand name, describe what you do, pick your industry and tone, then click Generate. The AI creates 8 unique slogans instantly, each labeled with a style tag (punchy, rhyming, alliterative, metaphoric, emotional, or witty) and a word count. You can copy any slogan with one click or regenerate to see new options.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is the AI slogan generator really free?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, completely free. No signup, no credit card, no hidden paywall. You can generate up to 8 batches per day (64 slogans total) from a single IP address.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How do you write a good slogan?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A good slogan is short (3 to 8 words), specific to your brand, easy to remember, and communicates one clear benefit or feeling. Use techniques like rhyme, alliteration, contrast, or metaphor. Avoid cliches like the best or leading provider. Always test a slogan by reading it aloud - if it does not roll off the tongue, keep iterating.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What makes a slogan memorable?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Memorable slogans share a few traits: rhythm (a natural beat when spoken), simplicity (short words, clear meaning), specificity (tied to a real benefit, not generic), and emotional resonance. Techniques like alliteration (Coca-Cola: Open Happiness), rhyme (Beanz Meanz Heinz), and contrast (Apple: Think Different) all make slogans stick.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Slogan vs tagline - what is the difference?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A tagline is a persistent brand identifier that stays with the company for years (Nike: Just Do It). A slogan is typically tied to a specific campaign or product and may change over time (McDonald's: I'm Lovin' It for the current campaign). Taglines capture brand essence, slogans drive specific messages. This generator supports both modes.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can I use the generated slogan commercially?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, you own the slogans you generate and can use them commercially. Before deploying a slogan publicly, we recommend a trademark search to check that your preferred phrase is not already registered in your industry and territory. A trademark attorney can confirm originality and help you register your own.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can I customize the tone of the slogans?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Use the tone slider to choose from five levels: Serious, Professional, Balanced, Playful, or Bold & Witty. You can also target specific audiences (enterprise buyers, Gen Z, families, creatives) and pick up to three style preferences (punchy, rhyming, alliterative, metaphoric, emotional, or benefit-led) for even finer control.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Does the slogan generator work for any industry?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. The generator supports 35+ industries out of the box (tech, food & beverage, healthcare, finance, retail, SaaS, fashion, fitness, and more) and will accept any custom industry you type into the field. The AI tailors vocabulary, rhythm, and benefit framing to your specific category.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Should I trademark my slogan?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "If your slogan becomes central to your brand and you plan to use it consistently in advertising, trademarking it is a smart move. A trademark prevents competitors from using a confusingly similar phrase in your category. Consult a trademark attorney or use services like LegalZoom or USPTO's TEAS to register. Taglines are more commonly trademarked than campaign-specific slogans.",
-          },
-        },
-      ],
+      mainEntity: FAQ_ITEMS.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
     },
   ];
 
@@ -634,48 +600,7 @@ export default function SloganGeneratorPage() {
             </h2>
           </div>
           <div className="space-y-4 animate-reveal" style={{ animationDelay: "100ms" }}>
-            {[
-              {
-                q: "What is a slogan?",
-                a: "A slogan is a short, memorable phrase used in advertising and marketing to promote a brand, product, or idea. Good slogans are 3 to 8 words, easy to remember, and communicate a clear benefit or feeling. Famous examples include Nike's Just Do It, Apple's Think Different, and McDonald's I'm Lovin' It.",
-              },
-              {
-                q: "How does the AI slogan generator work?",
-                a: "Enter your brand name, describe what you do, pick your industry and tone, then click Generate. The AI creates 8 unique slogans instantly, each labeled with a style tag (punchy, rhyming, alliterative, metaphoric, emotional, or witty) and a word count. You can copy any slogan with one click or regenerate to see new options.",
-              },
-              {
-                q: "Is the AI slogan generator really free?",
-                a: "Yes, completely free. No signup, no credit card, no hidden paywall. You can generate up to 8 batches per day (64 slogans total) from a single IP address.",
-              },
-              {
-                q: "How do you write a good slogan?",
-                a: "A good slogan is short (3 to 8 words), specific to your brand, easy to remember, and communicates one clear benefit or feeling. Use techniques like rhyme, alliteration, contrast, or metaphor. Avoid cliches like the best or leading provider. Always test a slogan by reading it aloud: if it does not roll off the tongue, keep iterating.",
-              },
-              {
-                q: "What makes a slogan memorable?",
-                a: "Memorable slogans share a few traits: rhythm (a natural beat when spoken), simplicity (short words, clear meaning), specificity (tied to a real benefit, not generic), and emotional resonance. Techniques like alliteration (Coca-Cola: Open Happiness), rhyme (Beanz Meanz Heinz), and contrast (Apple: Think Different) all make slogans stick.",
-              },
-              {
-                q: "Slogan vs tagline: what is the difference?",
-                a: "A tagline is a persistent brand identifier that stays with the company for years (Nike: Just Do It). A slogan is typically tied to a specific campaign or product and may change over time. Taglines capture brand essence, slogans drive specific messages. This generator supports both modes.",
-              },
-              {
-                q: "Can I use the generated slogan commercially?",
-                a: "Yes, you own the slogans you generate and can use them commercially. Before deploying a slogan publicly, we recommend a trademark search to check that your preferred phrase is not already registered in your industry and territory.",
-              },
-              {
-                q: "Can I customize the tone of the slogans?",
-                a: "Yes. Use the tone slider to choose from five levels: Serious, Professional, Balanced, Playful, or Bold & Witty. You can also target specific audiences and pick up to three style preferences for even finer control.",
-              },
-              {
-                q: "Does the slogan generator work for any industry?",
-                a: "Yes. The generator supports 35+ industries out of the box and will accept any custom industry you type into the field. The AI tailors vocabulary, rhythm, and benefit framing to your specific category.",
-              },
-              {
-                q: "Should I trademark my slogan?",
-                a: "If your slogan becomes central to your brand and you plan to use it consistently in advertising, trademarking it is a smart move. A trademark prevents competitors from using a confusingly similar phrase in your category. Taglines are more commonly trademarked than campaign-specific slogans.",
-              },
-            ].map((faq) => (
+            {FAQ_ITEMS.map((faq) => (
               <details
                 key={faq.q}
                 className="group rounded-[20px] border border-border bg-card shadow-sm overflow-hidden"
@@ -697,7 +622,7 @@ export default function SloganGeneratorPage() {
       <section className="border-t border-border bg-muted/30 py-20 sm:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="text-center mb-10 animate-reveal">
-            <h2 className="text-h3 text-foreground">More Free AI Tools From KolaviStudio</h2>
+            <h2 className="text-h3 text-foreground">More Free AI Tools From Kolavi Studio</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-reveal" style={{ animationDelay: "100ms" }}>
             {[

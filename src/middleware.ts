@@ -10,10 +10,12 @@ import {
 } from "@/lib/partner/cookie-server";
 
 /**
- * Nonce-based CSP. In production, allow 'unsafe-inline' for style-src so
- * framework/dependency inline styles (e.g. next-themes) don't trigger CSP
- * violations when pages are served from cache and nonce isn't applied.
- * Script hash allows common inline script (e.g. GA) when nonce is missing on cached HTML.
+ * Nonce-based CSP. Scripts are strict ('nonce-…' + 'strict-dynamic'): parser-
+ * inserted inline scripts (JSON-LD, next-themes) carry the x-nonce value, and
+ * GA (next/script, injected by the nonce'd Next runtime) is trusted via
+ * 'strict-dynamic', so no hash is needed. style-src allows 'unsafe-inline' (no nonce,
+ * since a nonce would disable 'unsafe-inline') so server-rendered style=""
+ * attributes (React style props, next/image fill) apply in production.
  */
 function getCspWithNonce(nonce: string): string {
   const isDev = process.env.NODE_ENV === "development";
@@ -25,23 +27,16 @@ function getCspWithNonce(nonce: string): string {
     "https://www.google-analytics.com",
     "https://embed.typeform.com",
     "https://tally.so",
-    // Allow GA inline script when nonce is missing on cached/ISR pages (Next.js issue #55638)
-    "'sha256-n46vPwSWuMC0W703pBofImv82226xo4LXymvAE9caPk='",
     ...(isDev ? ["'unsafe-eval'"] : []),
   ].join(" ");
-  // Production: nonce-only for styles (inline styles must carry nonce). Dev: unsafe-inline for convenience.
-  const styleSrc = [
-    "'self'",
-    ...(isDev ? ["'unsafe-inline'"] : ["'nonce-" + nonce + "'"]),
-    "https://fonts.googleapis.com",
-  ].join(" ");
+  const styleSrc = ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"].join(" ");
   return [
     "default-src 'self'",
     "script-src " + scriptSrc,
     "style-src " + styleSrc,
     "img-src 'self' data: blob: https:",
     "font-src 'self' https://fonts.gstatic.com data:",
-    "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://form.typeform.com https://embed.typeform.com https://www.typeform.com https://tally.so https://*.supabase.co wss://*.supabase.co",
+    "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googletagmanager.com https://form.typeform.com https://embed.typeform.com https://www.typeform.com https://tally.so https://*.supabase.co wss://*.supabase.co",
     "frame-src https://embed.typeform.com https://form.typeform.com https://www.typeform.com https://tally.so https://docs.google.com",
     "object-src 'none'",
     "base-uri 'self'",
@@ -120,14 +115,10 @@ export async function middleware(request: NextRequest) {
     response.headers.set(key, value);
   }
 
-  // Cache HTML for blog (ISR) to satisfy "Use efficient cache lifetimes" in PageSpeed
-  const pathname = request.nextUrl.pathname;
-  if (request.method === "GET" && pathname.startsWith("/blog/") && pathname !== "/blog/rss") {
-    response.headers.set(
-      "Cache-Control",
-      "public, s-maxage=60, stale-while-revalidate=120"
-    );
-  }
+  // No public Cache-Control on HTML here: every page embeds this request's CSP
+  // nonce, so a shared/CDN cache would serve a nonce that no longer matches the
+  // CSP header and all scripts would be blocked. Next's default for these
+  // dynamic pages (private, no-store) applies.
 
   if (process.env.NODE_ENV === "production") {
     response.headers.set(
@@ -142,8 +133,10 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all pathnames except _next/static, _next/image, favicon, and static assets.
+     * Match all pathnames except _next/static, _next/image and static files
+     * (images, fonts, robots.txt, sitemap.xml, rss.xml, manifest). Those need
+     * neither auth/Supabase refresh nor the HTML CSP nonce.
      */
-    "/((?!_next/static|_next/image|favicon.ico|logo.png|og-image.jpg).*)",
+    "/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|gif|svg|webp|avif|ico|txt|xml|webmanifest|woff2?)$).*)",
   ],
 };

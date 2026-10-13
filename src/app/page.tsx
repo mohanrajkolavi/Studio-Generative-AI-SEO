@@ -30,11 +30,11 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <main id="main-content" className="relative w-full">
+      <div className="relative w-full">
         <HeroRevamp />
         <ServicesSection />
         <HomeBelowFoldSections />
-      </main>
+      </div>
     </>
   );
 }

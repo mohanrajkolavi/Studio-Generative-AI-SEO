@@ -136,7 +136,7 @@ ${currentFacts.map(f => `- ${f}`).join("\n")}
 Derive 5 original insights for "${keyword}". Connect the gaps with the facts to look like a true industry expert.`;
 
     const callLLM = async (system: string) => {
-        const result = await callClaudeJson(system, userPrompt, { temperature: 0.25 });
+        const result = await callClaudeJson(system, userPrompt);
         const content = result.content;
         if (!content) throw new Error("generateAlgorithmicInsights: empty response from Claude");
 

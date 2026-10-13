@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSharedAnthropicClient } from "@/lib/anthropic/shared-client";
+import { CLAUDE_HAIKU_MODEL, getResponseText } from "@/lib/ai/models";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { logError } from "@/lib/logging/error";
 
@@ -135,28 +136,44 @@ export async function POST(request: NextRequest) {
 
 Platforms: ${platformSpec}`;
 
+    // Structured output: one array of versions per requested platform.
+    const biosSchema = {
+      type: "object",
+      properties: {
+        bios: {
+          type: "object",
+          properties: Object.fromEntries(
+            validPlatforms.map((p: string) => [p, { type: "array", items: { type: "string" } }])
+          ),
+          required: validPlatforms,
+          additionalProperties: false,
+        },
+      },
+      required: ["bios"],
+      additionalProperties: false,
+    };
+
     const client = getSharedAnthropicClient();
     const message = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 2048,
-      temperature: 0.6,
+      model: CLAUDE_HAIKU_MODEL,
+      max_tokens: 6144, // room for adaptive thinking plus the JSON
+      output_config: { effort: "low", format: { type: "json_schema", schema: biosSchema } },
       system: systemPrompt,
-      messages: [
-        { role: "user", content: userPrompt },
-        { role: "assistant", content: '{"bios":{' },
-      ],
+      messages: [{ role: "user", content: userPrompt }],
     }, {
       timeout: 25_000,
     });
 
-    const block = message.content?.[0];
-    if (!block || block.type !== "text") {
+    if (message.stop_reason === "refusal") {
+      return NextResponse.json({ error: "The AI could not write bios for this input. Please rephrase and try again." }, { status: 422 });
+    }
+    const text = getResponseText(message);
+    if (!text) {
       return NextResponse.json({ error: "AI returned an empty response. Please try again." }, { status: 500 });
     }
 
-    // Reconstruct JSON from prefill + response
     let parsed: { bios: Record<string, string | string[]> };
-    const rawJson = '{"bios":{' + block.text.replace(/```\s*$/, "").trim();
+    const rawJson = text.replace(/```\s*$/, "").trim();
     try {
       parsed = JSON.parse(rawJson);
     } catch {

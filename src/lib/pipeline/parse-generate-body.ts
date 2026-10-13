@@ -5,6 +5,7 @@
 
 import type { PipelineInput, SearchIntent, DraftModel } from "./types";
 import type { VoicePresetId } from "@/lib/constants/voices";
+import { normalizeDraftModel } from "@/lib/ai/models";
 
 const ALLOWED_INTENTS = new Set<SearchIntent>([
   "informational",
@@ -13,7 +14,6 @@ const ALLOWED_INTENTS = new Set<SearchIntent>([
   "transactional",
 ]);
 
-const DRAFT_MODELS = new Set<DraftModel>(["opus-4.6", "sonnet-4.6"]);
 
 const ALLOWED_VOICES = new Set<VoicePresetId>([
   "conversational-expert",
@@ -79,14 +79,9 @@ export function parseGenerateBody(body: unknown): ParseGenerateBodyResult {
       ? true
       : Boolean(autoFixHallucinations);
 
-  const draftModelRaw =
-    draftModel != null && typeof draftModel === "string"
-      ? draftModel.trim().toLowerCase()
-      : undefined;
-  const resolvedDraftModel: DraftModel | undefined =
-    draftModelRaw && DRAFT_MODELS.has(draftModelRaw as DraftModel)
-      ? (draftModelRaw as DraftModel)
-      : undefined;
+  const resolvedDraftModel: DraftModel | undefined = normalizeDraftModel(
+    typeof draftModel === "string" ? draftModel.trim().toLowerCase() : undefined
+  );
 
   // Voice preset
   const voiceRaw = voice != null && typeof voice === "string" ? voice.trim().toLowerCase() : undefined;

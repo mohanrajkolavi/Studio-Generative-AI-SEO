@@ -7,17 +7,21 @@ import { Check, X } from "lucide-react";
 export const metadata = getPageMetadata({
   title: "Pricing and Complete Scope | Kolavi Studio",
   description:
-    "Transparent tiers. No hidden retainers. A complete breakdown of the Kolavi Studio growth engine: Marketing, Growth, and Full System.",
+    "Clear tiers, custom quotes. A complete breakdown of the Kolavi Studio growth engine: Marketing, Growth, and Full System. Email us for pricing.",
   path: "/pricing",
   image: `${SITE_URL}/og-image.jpg`,
   keywords: "Kolavi Studio pricing, growth agency pricing, SEO packages, marketing tiers",
 });
 
+const PRICING_EMAIL = "kolavistudio@gmail.com";
+
+const buildMailto = (subject: string) =>
+  `mailto:${PRICING_EMAIL}?subject=${encodeURIComponent(subject)}`;
+
 // SECTION 01: TIERS
 const tiers = [
   {
     name: "Marketing",
-    price: "$2,499 setup fee + $999 / mo",
     bestFor: "Growing businesses ready to stop losing clients to competitors.",
     included: [
       "Custom Next.js website (up to 6 pages, 95+ PageSpeed guaranteed)",
@@ -39,12 +43,12 @@ const tiers = [
       "Conversion Rate Optimization (CRO) testing",
       "Full automation suite",
     ],
-    cta: "Book a Call for Marketing",
+    cta: "Email Us About Marketing",
+    ctaHref: buildMailto("Pricing inquiry - Marketing"),
     popular: false,
   },
   {
     name: "Growth",
-    price: "$3,499 setup fee + $1,499 / mo",
     bestFor: "Established businesses ready to own their local market.",
     included: [
       "Everything in Marketing, plus:",
@@ -65,12 +69,12 @@ const tiers = [
       "Conversion Rate Optimization (CRO) testing",
       "Full automation suite",
     ],
-    cta: "Book a Call for Growth",
+    cta: "Email Us About Growth",
+    ctaHref: buildMailto("Pricing inquiry - Growth"),
     popular: true,
   },
   {
     name: "Full System",
-    price: "$5,999 setup fee + $2,499 / mo",
     bestFor: "Multi-location operators who want total market ownership.",
     included: [
       "Everything in Growth, plus:",
@@ -86,7 +90,8 @@ const tiers = [
       "Monthly strategy call (60 minutes, up from 30) & quarterly strategy session with founder",
     ],
     notIncluded: [] as string[],
-    cta: "Book a Call for Full System",
+    cta: "Email Us About Full System",
+    ctaHref: buildMailto("Pricing inquiry - Full System"),
     popular: false,
   },
 ];
@@ -123,21 +128,21 @@ const compareTableRows: { section?: string; feature: string; marketing: string; 
 // SECTION 03: ONE-TIME & ADD-ONS
 const oneTimeProjects = [
   { name: "SEO Audit and Roadmap", price: "Free" },
-  { name: "Custom AI Chatbot", price: "$999" },
-  { name: "Website Speed Overhaul", price: "$1,499" },
-  { name: "Full Lead Gen Funnel Build", price: "$1,499 to $2,499" },
-  { name: "CRO Sprint (30 days)", price: "$1,499 to $2,499" },
-  { name: "Programmatic SEO Sprint (100 Pages)", price: "$1,999" },
-  { name: "Custom Next.js Website (Standalone)", price: "$3,500" },
+  { name: "Custom AI Chatbot", price: "Custom quote" },
+  { name: "Website Speed Overhaul", price: "Custom quote" },
+  { name: "Full Lead Gen Funnel Build", price: "Custom quote" },
+  { name: "CRO Sprint (30 days)", price: "Custom quote" },
+  { name: "Programmatic SEO Sprint (100 Pages)", price: "Custom quote" },
+  { name: "Custom Next.js Website (Standalone)", price: "Custom quote" },
 ];
 
 const monthlyAddOns = [
-  { name: "Google or Meta Ads Management", price: "$699 / mo" },
-  { name: "Social Media Video Editing (4 videos)", price: "$199 / mo" },
-  { name: "GEO Optimization Standalone", price: "$199 / mo" },
-  { name: "AI Chatbot Maintenance & Optimization", price: "$149 / mo" },
-  { name: "Extra Location SEO Page", price: "$99 / mo" },
-  { name: "Extra SEO Blog Post", price: "$69 / post" },
+  { name: "Google or Meta Ads Management", price: "Custom quote" },
+  { name: "Social Media Video Editing (4 videos)", price: "Custom quote" },
+  { name: "GEO Optimization Standalone", price: "Custom quote" },
+  { name: "AI Chatbot Maintenance & Optimization", price: "Custom quote" },
+  { name: "Extra Location SEO Page", price: "Custom quote" },
+  { name: "Extra SEO Blog Post", price: "Custom quote" },
 ];
 
 // SECTION 05: HOW WE COMPARE (2 columns: Kolavi vs Traditional Agency)
@@ -189,7 +194,7 @@ const howWeCompare = [
   },
   {
     feature: "Pricing Structure",
-    kolavi: "Transparent flat-rate tiers. You own the assets.",
+    kolavi: "Clear tiers, quoted to your exact scope. You own the assets.",
     traditional: "Vague retainers, hourly billing, proprietary lock-ins.",
   },
 ];
@@ -215,7 +220,14 @@ export default function PricingPage() {
           </h1>
 
           <p className="text-body text-muted-foreground max-w-[650px] mx-auto text-balance mb-12">
-            Transparent tiers. No hidden retainers. A complete breakdown of the Kolavi Studio growth engine.
+            Clear tiers, custom quotes. A complete breakdown of the Kolavi Studio growth engine. Email{" "}
+            <a
+              href={`mailto:${PRICING_EMAIL}`}
+              className="text-primary font-medium underline-offset-4 hover:underline"
+            >
+              {PRICING_EMAIL}
+            </a>{" "}
+            for a quote.
           </p>
 
           <Button
@@ -268,7 +280,7 @@ export default function PricingPage() {
                 <div className="px-6 sm:px-7 py-5 bg-muted/30 border-b border-border/80">
                   <p className="text-[13px] text-muted-foreground mb-1">Setup + monthly</p>
                   <p className="text-lg sm:text-xl font-bold text-foreground leading-snug">
-                    {tier.price}
+                    Custom quote
                   </p>
                 </div>
 
@@ -313,7 +325,7 @@ export default function PricingPage() {
                     variant={tier.popular ? "default" : "outline"}
                     className="w-full rounded-full font-semibold"
                   >
-                    <Link href="/contact">{tier.cta}</Link>
+                    <a href={tier.ctaHref}>{tier.cta}</a>
                   </Button>
                 </div>
               </article>
@@ -371,7 +383,13 @@ export default function PricingPage() {
               One-Time Projects & Monthly Add-Ons
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Need specific solutions instead of a full tier? We scope custom builds for your exact bottleneck.
+              Need specific solutions instead of a full tier? We scope custom builds for your exact bottleneck.{" "}
+              <a
+                href={buildMailto("Add-on inquiry")}
+                className="text-primary font-medium underline-offset-4 hover:underline"
+              >
+                Email us for a quote.
+              </a>
             </p>
           </header>
 

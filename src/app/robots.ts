@@ -5,11 +5,9 @@ const DISALLOWED_PATHS = [
   "/api/",
   "/admin/",
   "/dashboard/",
-  "/partner/login",
-  "/partner/forgot-password",
-  "/partner/set-password",
-  "/partner/dashboard",
 ];
+// Partner auth pages are not disallowed on purpose: they carry noindex, and
+// crawlers must be able to fetch them to see it.
 
 /**
  * robots.txt with AI crawler management.
@@ -41,7 +39,12 @@ export default function robots(): MetadataRoute.Robots {
         disallow: DISALLOWED_PATHS,
       },
       {
-        userAgent: "ClaudeBot",
+        userAgent: "Claude-SearchBot",
+        allow: "/",
+        disallow: DISALLOWED_PATHS,
+      },
+      {
+        userAgent: "Claude-User",
         allow: "/",
         disallow: DISALLOWED_PATHS,
       },
@@ -62,6 +65,10 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "Google-Extended",
+        disallow: ["/"],
+      },
+      {
+        userAgent: "ClaudeBot",
         disallow: ["/"],
       },
       {

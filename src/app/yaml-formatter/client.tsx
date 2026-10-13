@@ -87,7 +87,10 @@ function YamlFormatterInner({ faqs }: YamlFormatterClientProps) {
     try {
       return hljs.highlight(formatted.output, { language: "yaml" }).value;
     } catch {
-      return formatted.output;
+      return formatted.output
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
     }
   }, [formatted]);
 

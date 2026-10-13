@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getPageMetadata } from "@/lib/seo/metadata";
 import { getBreadcrumbSchema } from "@/lib/seo/jsonld/breadcrumb";
-import { getFAQSchema } from "@/lib/seo/jsonld/faq";
+import { getFAQSchema, type FAQItem } from "@/lib/seo/jsonld/faq";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { CopyButton } from "@/components/markdown-tools/CopyButton";
 import { ToolFooter } from "@/components/markdown-tools/ToolFooter";
 import { Button } from "@/components/ui/button";
@@ -101,6 +102,29 @@ const syntaxEntries = [
   },
 ];
 
+const FAQS: FAQItem[] = [
+  {
+    question: "What is GitHub Flavored Markdown?",
+    answer:
+      "GitHub Flavored Markdown (GFM) is an extended version of standard Markdown used across GitHub. It adds support for tables, task lists, strikethrough, fenced code blocks with syntax highlighting, autolinks, footnotes, and alert callouts. GFM is used in READMEs, issues, pull requests, and discussions.",
+  },
+  {
+    question: "How do you create tables in GitHub markdown?",
+    answer:
+      "Use pipes (|) to separate columns and hyphens (---) for the header separator row. Every table requires a header row and a separator row to render correctly. You can set column alignment with colons, for example :--- for left, :---: for center, and ---: for right.",
+  },
+  {
+    question: "What are GitHub markdown alerts?",
+    answer:
+      "Alerts are a GitHub-specific extension that creates highlighted callout boxes. Use > [!NOTE], > [!TIP], > [!IMPORTANT], > [!WARNING], or > [!CAUTION] at the start of a block quote. These are rendered with distinct colors and icons on GitHub but may not work in other Markdown processors.",
+  },
+  {
+    question: "How do you add task lists in GitHub markdown?",
+    answer:
+      "Use - [ ] for an unchecked item and - [x] for a checked item. Task list checkboxes are interactive in issues and pull requests, allowing collaborators to check them off directly. In README files, task lists render as read-only checkboxes.",
+  },
+];
+
 export default function GitHubMarkdownPage() {
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Home", url: "/" },
@@ -108,28 +132,7 @@ export default function GitHubMarkdownPage() {
     { name: "GitHub Markdown", url: "/github-markdown" },
   ]);
 
-  const faqSchema = getFAQSchema([
-    {
-      question: "What is GitHub Flavored Markdown?",
-      answer:
-        "GitHub Flavored Markdown (GFM) is an extended version of standard Markdown used across GitHub. It adds support for tables, task lists, strikethrough, fenced code blocks with syntax highlighting, autolinks, footnotes, and alert callouts. GFM is used in READMEs, issues, pull requests, and discussions.",
-    },
-    {
-      question: "How do you create tables in GitHub markdown?",
-      answer:
-        "Use pipes (|) to separate columns and hyphens (---) for the header separator row. Every table requires a header row and a separator row to render correctly. You can set column alignment with colons, for example :--- for left, :---: for center, and ---: for right.",
-    },
-    {
-      question: "What are GitHub markdown alerts?",
-      answer:
-        "Alerts are a GitHub-specific extension that creates highlighted callout boxes. Use > [!NOTE], > [!TIP], > [!IMPORTANT], > [!WARNING], or > [!CAUTION] at the start of a block quote. These are rendered with distinct colors and icons on GitHub but may not work in other Markdown processors.",
-    },
-    {
-      question: "How do you add task lists in GitHub markdown?",
-      answer:
-        "Use - [ ] for an unchecked item and - [x] for a checked item. Task list checkboxes are interactive in issues and pull requests, allowing collaborators to check them off directly. In README files, task lists render as read-only checkboxes.",
-    },
-  ]);
+  const faqSchema = getFAQSchema(FAQS);
 
   return (
     <>
@@ -277,6 +280,7 @@ export default function GitHubMarkdownPage() {
           </div>
         </div>
 
+        <FaqSection items={FAQS} />
         <ToolFooter currentPath="/github-markdown" />
       </div>
     </>

@@ -241,9 +241,13 @@ export function BioGenerator() {
   }, []);
 
   const handleCopy = useCallback(async (platform: string, text: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopiedPlatform(platform);
-    setTimeout(() => setCopiedPlatform(null), 2000);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedPlatform(platform);
+      setTimeout(() => setCopiedPlatform(null), 2000);
+    } catch {
+      // Clipboard may be unavailable
+    }
   }, []);
 
   const handleGenerate = async (e?: React.FormEvent) => {
@@ -257,13 +261,10 @@ export function BioGenerator() {
     setError(null);
     setResults(null);
 
-    const controller = new AbortController();
-
     try {
       const res = await fetch("/api/bio-generator", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
         body: JSON.stringify({
           name: name.trim(),
           role: role.trim(),
@@ -277,7 +278,17 @@ export function BioGenerator() {
         }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error(
+          res.ok
+            ? "Invalid response from server. Please try again."
+            : "Failed to generate bios. Please try again."
+        );
+      }
       if (!res.ok) throw new Error(data.error || "Failed to generate bios");
 
       setResults(data.bios);
@@ -287,7 +298,6 @@ export function BioGenerator() {
         tone: String(tone),
       });
     } catch (err) {
-      if (err instanceof DOMException && err.name === "AbortError") return;
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setIsGenerating(false);

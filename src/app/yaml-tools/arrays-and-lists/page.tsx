@@ -10,18 +10,18 @@ import { YamlToolFooter } from "@/components/yaml-tools/YamlToolFooter";
 const PAGE_PATH = "/yaml-tools/arrays-and-lists";
 const PAGE_URL = "https://kolavistudio.com/yaml-tools/arrays-and-lists";
 const DATE_PUBLISHED = "2026-04-28T00:00:00Z";
-const DATE_MODIFIED = "2026-04-28T00:00:00Z";
-const LAST_UPDATED_LABEL = "Last updated: April 28, 2026";
+const DATE_MODIFIED = "2026-10-13T00:00:00Z";
+const LAST_UPDATED_LABEL = "Last updated: October 13, 2026";
 const AUTHOR_NAME = "Mohan Raj Kolavi";
 const AUTHOR_URL = "/about";
 
 export const metadata = getPageMetadata({
-  title: "YAML Arrays, Lists, and Dictionaries: Complete Guide (2026)",
+  title: "YAML Lists & Arrays: Empty List, Dictionary, Nested Examples",
   description:
-    "YAML lists, arrays, and dictionaries explained: block sequences, flow style, nested arrays, lists of maps, and the variables idiom. Copy-ready examples included.",
+    "YAML lists and arrays: block (- item) vs flow ([a, b]), empty list [] and empty dictionary {}, lists of dictionaries, nested lists, and list vs dictionary.",
   path: PAGE_PATH,
   keywords:
-    "yaml list, yaml array, yaml dictionary, yaml variables, yaml lists, yaml nested array, yaml list of maps, yaml flow array, yaml block sequence",
+    "yaml list, yaml array, yaml dictionary, yaml empty list, yaml empty array, yaml empty dictionary, yaml empty dict, yaml list vs dictionary, yaml list of dictionaries, yaml nested list, yaml variables, yaml list of maps, yaml flow array, yaml block sequence",
   author: AUTHOR_NAME,
   publishedTime: DATE_PUBLISHED,
   modifiedTime: DATE_MODIFIED,
@@ -90,16 +90,44 @@ staging:
   log_level: debug   # Override one field
 `;
 
-const emptyAndNull = `# Empty list
+const emptyAndNull = `# Empty list / empty array
 tags: []
 
-# Empty map
+# Empty dictionary / empty map
 metadata: {}
 
-# Null value (three valid forms)
+# Null value (three equivalent forms)
 description: null
-description: ~
-description:
+summary: ~
+notes:
+`;
+
+const emptyParsed = `# Python: yaml.safe_load() of the file above
+{
+    "tags": [],          # empty list
+    "metadata": {},      # empty dict
+    "description": None, # null, NOT an empty list
+    "summary": None,
+    "notes": None,
+}
+`;
+
+const listVsDict = `# List (sequence): ordered items, accessed by position
+fruits:
+  - apple
+  - banana
+
+# Dictionary (mapping): named keys, accessed by key
+prices:
+  apple: 1.20
+  banana: 0.50
+
+# List of dictionaries: the most common combination
+inventory:
+  - name: apple
+    price: 1.20
+  - name: banana
+    price: 0.50
 `;
 
 const FAQS = [
@@ -134,9 +162,19 @@ const FAQS = [
       "Not natively. The closest equivalents are anchors (&name) and aliases (*name), which let you reuse a value defined earlier. The merge key (<<: *anchor) splices a map's contents into another map, which is the canonical 'shared defaults' pattern.",
   },
   {
-    question: "How do I represent an empty list or map in YAML?",
+    question: "How do I write an empty list or empty array in YAML?",
     answer:
-      "Use empty flow syntax: `[]` for an empty list, `{}` for an empty map. Plain `key:` with no value parses as null, not as an empty container.",
+      "Use empty flow brackets: `tags: []`. That parses to an empty list in Python, an empty array in JavaScript, and an empty slice in Go. A bare `tags:` with no value parses as null, not as an empty list.",
+  },
+  {
+    question: "How do I write an empty dictionary in YAML?",
+    answer:
+      "Use empty flow braces: `metadata: {}`. That parses to an empty dict in Python or an empty object in JavaScript. Leaving the value blank (`metadata:`) produces null instead.",
+  },
+  {
+    question: "What is the difference between a list and a dictionary in YAML?",
+    answer:
+      "A list (sequence) is an ordered collection of items written with a leading dash (`- item`) and accessed by position. A dictionary (mapping) is a set of key-value pairs written as `key: value` and accessed by key. Lists often contain dictionaries, which is the shape used by Kubernetes containers and GitHub Actions steps.",
   },
   {
     question: "Can YAML lists contain mixed types?",
@@ -173,7 +211,7 @@ export default function YamlArraysAndListsPage() {
     authorName: AUTHOR_NAME,
     authorUrl: AUTHOR_URL,
     url: PAGE_URL,
-    wordCount: 1500,
+    wordCount: 1800,
   });
 
   const howToSchema = getHowToSchema({
@@ -225,12 +263,12 @@ export default function YamlArraysAndListsPage() {
               {LAST_UPDATED_LABEL}
             </p>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              YAML Arrays, Lists, and Dictionaries
+              YAML Lists, Arrays, and Dictionaries
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
-              How to write block and flow lists, nested arrays, dictionaries
-              (mappings), and the &quot;variables&quot; pattern using anchors -
-              with copy-ready examples for every shape.
+              How to write block and flow lists, empty lists and dictionaries,
+              nested arrays, lists of dictionaries, and the &quot;variables&quot;
+              pattern using anchors - with copy-ready examples for every shape.
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
               Written by{" "}
@@ -252,7 +290,9 @@ export default function YamlArraysAndListsPage() {
               <strong>mapping</strong>. Block style uses indentation and dashes
               (<code>- item</code>); flow style uses brackets (
               <code>[a, b, c]</code>) and braces (
-              <code>{`{ a: 1 }`}</code>). YAML has no native variables — use{" "}
+              <code>{`{ a: 1 }`}</code>). An empty list is <code>[]</code> and
+              an empty dictionary is <code>{`{}`}</code>. YAML has no native
+              variables — use{" "}
               <Link
                 href="/yaml-tools/anchors"
                 className="text-primary hover:underline"
@@ -313,7 +353,7 @@ export default function YamlArraysAndListsPage() {
               </pre>
             </div>
 
-            <h2 id="list-of-maps">List of maps (most common shape)</h2>
+            <h2 id="list-of-maps">List of dictionaries (list of maps)</h2>
             <p>
               Kubernetes containers, GitHub Actions steps, and Compose services
               all use this pattern. Each list item is a map:
@@ -374,7 +414,7 @@ export default function YamlArraysAndListsPage() {
               for the full pattern.
             </p>
 
-            <h2 id="empty-and-null">Empty lists, empty maps, and null</h2>
+            <h2 id="empty-and-null">YAML empty list, empty array, and empty dictionary</h2>
             <div className="not-prose rounded-lg border bg-muted/30 p-4">
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-xs font-semibold text-muted-foreground">
@@ -387,11 +427,49 @@ export default function YamlArraysAndListsPage() {
               </pre>
             </div>
             <p>
-              An empty list is <code>[]</code>; an empty map is{" "}
-              <code>{`{}`}</code>. A bare <code>key:</code> with no value is{" "}
-              <strong>null</strong>, not an empty list or map. This trips up
-              many beginners.
+              An empty list (empty array) is <code>[]</code>; an empty
+              dictionary (empty map) is <code>{`{}`}</code>. A bare{" "}
+              <code>key:</code> with no value is <strong>null</strong>, not an
+              empty list or dictionary. This trips up many beginners, because
+              code that loops over the value crashes on null. Here is what a
+              parser returns for the file above:
             </p>
+            <div className="not-prose rounded-lg border bg-muted/30 p-4">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  parsed.py
+                </span>
+                <CopyButton content={emptyParsed} label="Copy" />
+              </div>
+              <pre className="overflow-x-auto whitespace-pre font-mono text-xs">
+                {emptyParsed}
+              </pre>
+            </div>
+            <p>
+              Block style has no way to write an empty list - a dash always
+              introduces an item - so use <code>[]</code> even in files that
+              are otherwise block style.
+            </p>
+
+            <h2 id="list-vs-dictionary">YAML list vs dictionary</h2>
+            <p>
+              Use a <strong>list</strong> when order matters or items are
+              interchangeable (tags, ports, steps). Use a{" "}
+              <strong>dictionary</strong> when each value has a name (config
+              settings, a single record). When you have many records, combine
+              them: a list of dictionaries.
+            </p>
+            <div className="not-prose rounded-lg border bg-muted/30 p-4">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  list-vs-dict.yaml
+                </span>
+                <CopyButton content={listVsDict} label="Copy" />
+              </div>
+              <pre className="overflow-x-auto whitespace-pre font-mono text-xs">
+                {listVsDict}
+              </pre>
+            </div>
 
             <h2 id="when-to-use-which">When to use block vs flow</h2>
             <ul>

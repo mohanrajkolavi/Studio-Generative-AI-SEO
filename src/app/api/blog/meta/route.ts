@@ -3,6 +3,7 @@ import { isAuthenticated } from "@/lib/auth";
 import { auditArticle } from "@/lib/seo/article-audit";
 import { generateTitleMetaSlugFromContent } from "@/lib/claude/client";
 import type { TitleMetaSlugOption } from "@/lib/openai/client";
+import { normalizeDraftModel } from "@/lib/ai/models";
 
 /** Normalize intent for meta generation (Google: match search intent). */
 function normalizeIntent(intent: string): string {
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  let body: { content?: string; primaryKeyword?: string; intent?: string; draftModel?: "opus-4.6" | "sonnet-4.6" };
+  let body: { content?: string; primaryKeyword?: string; intent?: string; draftModel?: string };
   try {
     body = await request.json();
   } catch {
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
   const content = typeof body.content === "string" ? body.content.trim() : "";
   const primaryKeyword = typeof body.primaryKeyword === "string" ? body.primaryKeyword.trim() : "";
   const intent = typeof body.intent === "string" ? body.intent : "informational";
-  const draftModel = body.draftModel === "opus-4.6" || body.draftModel === "sonnet-4.6" ? body.draftModel : "opus-4.6";
+  const draftModel = normalizeDraftModel(body.draftModel) ?? "opus";
 
   if (!content) {
     return new Response(JSON.stringify({ error: "content is required" }), {

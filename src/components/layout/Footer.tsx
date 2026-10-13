@@ -13,7 +13,7 @@ const FOOTER_SECTIONS: { title: string; links: FooterLink[] }[] = [
     title: "Why us",
     links: [
       { href: "/#services", label: "Services" },
-      { href: "/#pricing", label: "Investment plans" },
+      { href: "/#pricing", label: "Packages" },
       { href: "/portfolio", label: "Portfolio" },
     ],
   },
