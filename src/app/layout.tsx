@@ -56,7 +56,7 @@ export default async function RootLayout({
         >
           Skip to main content
         </a>
-        <ThemeProvider>
+        <ThemeProvider nonce={nonce}>
           <LayoutShell isAdmin={isAdmin}>
             <main id="main-content" className="min-h-screen overflow-x-clip">{children}</main>
           </LayoutShell>
