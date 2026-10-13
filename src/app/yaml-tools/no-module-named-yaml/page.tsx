@@ -10,18 +10,18 @@ import { YamlToolFooter } from "@/components/yaml-tools/YamlToolFooter";
 const PAGE_PATH = "/yaml-tools/no-module-named-yaml";
 const PAGE_URL = "https://kolavistudio.com/yaml-tools/no-module-named-yaml";
 const DATE_PUBLISHED = "2026-04-28T00:00:00Z";
-const DATE_MODIFIED = "2026-04-28T00:00:00Z";
-const LAST_UPDATED_LABEL = "Last updated: April 28, 2026";
+const DATE_MODIFIED = "2026-10-13T00:00:00Z";
+const LAST_UPDATED_LABEL = "Last updated: October 13, 2026";
 const AUTHOR_NAME = "Mohan Raj Kolavi";
 const AUTHOR_URL = "/about";
 
 export const metadata = getPageMetadata({
-  title: "Fix: ModuleNotFoundError: No module named 'yaml' (Python 2026)",
+  title: "ModuleNotFoundError: No module named 'yaml' - Fixed (2026)",
   description:
-    "Fix the Python ImportError 'No module named yaml' in seconds. Covers pip install pyyaml, virtual environments, Conda, macOS path issues, and Docker.",
+    "The package is pyyaml, not yaml. Run python -m pip install pyyaml. Fixes for venv, Conda, Jupyter, macOS/Homebrew, externally-managed-environment, and Docker.",
   path: PAGE_PATH,
   keywords:
-    "modulenotfounderror: no module named 'yaml', no module named yaml, no module named 'yaml', pip install yaml, install pyyaml, python no module named yaml, importerror no module named yaml",
+    "modulenotfounderror: no module named 'yaml', no module named yaml, no module named 'yaml', import yaml modulenotfounderror, pip install yaml, pip install yaml not working, could not find a version that satisfies the requirement yaml, install pyyaml, conda install pyyaml, python no module named yaml, importerror no module named yaml, jupyter no module named yaml",
   author: AUTHOR_NAME,
   publishedTime: DATE_PUBLISHED,
   modifiedTime: DATE_MODIFIED,
@@ -59,6 +59,33 @@ conda install pyyaml
 conda install -c conda-forge pyyaml
 `;
 
+const pipYamlError = `$ pip install yaml
+ERROR: Could not find a version that satisfies the requirement yaml (from versions: none)
+ERROR: No matching distribution found for yaml
+
+# Fix: install the real package name
+python -m pip install pyyaml
+`;
+
+const fixJupyter = `# Run inside a notebook cell - installs into the active kernel
+%pip install pyyaml
+
+# Then restart the kernel and import
+import yaml
+`;
+
+const fixExternallyManaged = `# Homebrew Python (macOS) and Debian/Ubuntu block system-wide pip installs:
+#   error: externally-managed-environment
+
+# Option A (recommended): use a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+pip install pyyaml
+
+# Option B (Debian / Ubuntu): install the distro package
+sudo apt install python3-yaml
+`;
+
 const fixDocker = `# Add to your Dockerfile
 RUN pip install --no-cache-dir pyyaml
 
@@ -91,6 +118,21 @@ const FAQS = [
     question: "What if pip install pyyaml says 'already satisfied' but I still get the error?",
     answer:
       "You almost certainly have multiple Python installations. The pip command installed PyYAML into a different interpreter than the one running your script. Run 'python -m pip install pyyaml' to install into the same interpreter you use to run code.",
+  },
+  {
+    question: "Why does 'pip install yaml' fail with 'Could not find a version that satisfies the requirement yaml'?",
+    answer:
+      "Because there is no installable package called 'yaml' on PyPI. The YAML library for Python is published as 'pyyaml'. Run 'python -m pip install pyyaml' instead; you still write 'import yaml' in your code.",
+  },
+  {
+    question: "How do I fix 'No module named yaml' in Jupyter Notebook?",
+    answer:
+      "Run '%pip install pyyaml' in a notebook cell, then restart the kernel. The %pip magic installs into the environment of the running kernel, which is often different from the Python your terminal's pip points to.",
+  },
+  {
+    question: "How do I fix 'error: externally-managed-environment' when installing PyYAML?",
+    answer:
+      "Homebrew Python on macOS and recent Debian and Ubuntu releases block pip from installing into the system Python (PEP 668). Create a virtual environment with 'python3 -m venv .venv', activate it, and run 'pip install pyyaml'. On Debian or Ubuntu you can also run 'sudo apt install python3-yaml'.",
   },
   {
     question: "How do I install PyYAML in a virtual environment?",
@@ -141,13 +183,13 @@ export default function NoModuleNamedYamlPage() {
   const articleSchema = getArticleSchema({
     headline: "ModuleNotFoundError: No module named 'yaml' - How to Fix",
     description:
-      "Step-by-step fix for the Python ImportError 'No module named yaml' covering pip, venv, Conda, macOS, and Docker.",
+      "Step-by-step fix for the Python ImportError 'No module named yaml' covering pip, venv, Conda, Jupyter, macOS/Homebrew, and Docker.",
     datePublished: DATE_PUBLISHED,
     dateModified: DATE_MODIFIED,
     authorName: AUTHOR_NAME,
     authorUrl: AUTHOR_URL,
     url: PAGE_URL,
-    wordCount: 1500,
+    wordCount: 1900,
   });
 
   const howToSchema = getHowToSchema({
@@ -204,8 +246,8 @@ export default function NoModuleNamedYamlPage() {
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
               The fastest fix for the Python ImportError, plus how to handle
-              the trickier cases involving virtual environments, Conda, macOS
-              system Python, and Docker.
+              the trickier cases involving virtual environments, Conda,
+              Jupyter, macOS and Homebrew Python, and Docker.
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
               Written by{" "}
@@ -267,10 +309,26 @@ export default function NoModuleNamedYamlPage() {
                 {fixPip}
               </pre>
             </div>
+            <h3 id="pip-install-yaml-not-working">
+              Why <code>pip install yaml</code> does not work
+            </h3>
             <p>
-              <code>pip install yaml</code> will not work - that name does not
-              point to PyYAML on PyPI.
+              <code>pip install yaml</code> fails because PyYAML is not
+              published under that name. pip responds with &quot;Could not
+              find a version that satisfies the requirement yaml (from
+              versions: none)&quot;:
             </p>
+            <div className="not-prose rounded-lg border bg-muted/30 p-4">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  terminal
+                </span>
+                <CopyButton content={pipYamlError} label="Copy" />
+              </div>
+              <pre className="overflow-x-auto whitespace-pre font-mono text-xs">
+                {pipYamlError}
+              </pre>
+            </div>
 
             <h2 id="fix-2">Fix 2: virtual environments</h2>
             <p>
@@ -354,6 +412,46 @@ export default function NoModuleNamedYamlPage() {
               </div>
               <pre className="overflow-x-auto whitespace-pre font-mono text-xs">
                 {fixDocker}
+              </pre>
+            </div>
+
+            <h2 id="fix-6">Fix 6: Jupyter Notebook and JupyterLab</h2>
+            <p>
+              Notebooks often run on a different interpreter than your
+              terminal, so <code>pip install pyyaml</code> in a shell can
+              succeed while the notebook still raises the error. Install from
+              inside the notebook so the package lands in the kernel&apos;s
+              environment:
+            </p>
+            <div className="not-prose rounded-lg border bg-muted/30 p-4">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  notebook cell
+                </span>
+                <CopyButton content={fixJupyter} label="Copy" />
+              </div>
+              <pre className="overflow-x-auto whitespace-pre font-mono text-xs">
+                {fixJupyter}
+              </pre>
+            </div>
+
+            <h2 id="fix-7">Fix 7: &quot;externally-managed-environment&quot; (Homebrew, Debian, Ubuntu)</h2>
+            <p>
+              Homebrew Python on macOS and recent Debian and Ubuntu releases
+              mark the system interpreter as externally managed (PEP 668), so
+              a plain <code>pip install pyyaml</code> stops with{" "}
+              <code>error: externally-managed-environment</code>. Install
+              into a virtual environment instead, or use the distro package:
+            </p>
+            <div className="not-prose rounded-lg border bg-muted/30 p-4">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  terminal
+                </span>
+                <CopyButton content={fixExternallyManaged} label="Copy" />
+              </div>
+              <pre className="overflow-x-auto whitespace-pre font-mono text-xs">
+                {fixExternallyManaged}
               </pre>
             </div>
 

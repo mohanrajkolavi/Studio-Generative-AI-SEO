@@ -10,8 +10,8 @@ import { YamlToolFooter } from "@/components/yaml-tools/YamlToolFooter";
 const PAGE_PATH = "/yaml-tools/anchors";
 const PAGE_URL = "https://kolavistudio.com/yaml-tools/anchors";
 const DATE_PUBLISHED = "2026-04-28T00:00:00Z";
-const DATE_MODIFIED = "2026-04-28T00:00:00Z";
-const LAST_UPDATED_LABEL = "Last updated: April 28, 2026";
+const DATE_MODIFIED = "2026-10-13T00:00:00Z";
+const LAST_UPDATED_LABEL = "Last updated: October 13, 2026";
 const AUTHOR_NAME = "Mohan Raj Kolavi";
 const AUTHOR_URL = "/about";
 
@@ -81,6 +81,21 @@ web:
 
 api:
   ports: *common_ports
+`;
+
+const mergeLists = `base_packages: &base
+  - curl
+  - git
+
+# Not allowed - the merge key only accepts mappings:
+# packages:
+#   <<: *base
+
+# Aliasing the list as one item gives a NESTED list
+packages:
+  - *base
+  - jq
+# parses to: [["curl", "git"], "jq"]
 `;
 
 const composeExample = `# docker-compose.yml - share env across services
@@ -203,6 +218,11 @@ const FAQS = [
     question: "Can I anchor a list or a scalar in YAML?",
     answer:
       "Yes. Anchors work on any node - scalars, sequences (lists), and mappings (dictionaries). You cannot use the merge key '<<:' with a sequence or scalar; the merge key is only valid when the aliased value is a mapping. For sequences and scalars use a plain alias '*name' to substitute the value in place.",
+  },
+  {
+    question: "Can I merge two lists (arrays) in YAML?",
+    answer:
+      "Not with plain YAML. The merge key '<<:' only merges mappings, and parsers reject it on a sequence. Aliasing a list inside another list ('- *base') produces a nested list rather than a concatenated one. To combine lists, flatten them in your application code, or use a tool that supports it, such as GitLab CI's !reference tag or a templating layer like Helm or Jinja.",
   },
   {
     question: "Should I use YAML anchors or a templating tool like Helm?",
@@ -333,6 +353,11 @@ export default function YamlAnchorsPage() {
               <li>
                 <a href="#scalars-lists" className="text-primary hover:underline">
                   Anchors on scalars and lists
+                </a>
+              </li>
+              <li>
+                <a href="#merge-lists" className="text-primary hover:underline">
+                  Can you merge lists?
                 </a>
               </li>
               <li>
@@ -471,6 +496,31 @@ export default function YamlAnchorsPage() {
               The merge key (<code>&lt;&lt;:</code>) only works when the
               aliased value is a mapping. For lists and scalars, use a plain
               alias.
+            </p>
+
+            <h2 id="merge-lists">Can you merge lists with YAML anchors?</h2>
+            <p>
+              No. YAML has no list-concatenation operator. The merge key only
+              accepts mappings (a parser will reject{" "}
+              <code>&lt;&lt;: *list</code>), and aliasing a list inside another
+              list nests it instead of splicing it in:
+            </p>
+            <div className="not-prose rounded-lg border bg-muted/30 p-4">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  merge-lists.yaml
+                </span>
+                <CopyButton content={mergeLists} label="Copy" />
+              </div>
+              <pre className="overflow-x-auto whitespace-pre font-mono text-xs">
+                {mergeLists}
+              </pre>
+            </div>
+            <p>
+              If you need a combined list, flatten it in the code that reads
+              the file, or use a tool-level feature such as GitLab CI&apos;s{" "}
+              <code>!reference</code> tag or a templating layer (Helm, Jinja).
+              To share <em>map</em> entries, the merge key is the right tool.
             </p>
 
             <h2 id="docker-compose">Docker Compose example</h2>

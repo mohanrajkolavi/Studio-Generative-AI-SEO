@@ -26,18 +26,18 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const PAGE_PUBLISHED = "2025-09-10T00:00:00.000Z";
-const PAGE_MODIFIED = "2026-04-24T00:00:00.000Z";
+const PAGE_PUBLISHED = "2026-04-15T00:00:00.000Z";
+const PAGE_MODIFIED = "2026-10-13T00:00:00.000Z";
 
 export const metadata = getPageMetadata({
-  title: "Motto Generator: AI for Family, Business, School & Personal",
+  title: "Motto Generator: Family, Latin, School & Personal Mottos",
   description:
-    "Motto generator free AI tool for family, business, school, company, and personal mottos. Get 8 values-driven motto options in seconds. No signup, no credit card.",
+    "Free AI motto generator for family, Latin, school, business, and personal mottos. Get 8 values-driven options in seconds, with English translations for Latin.",
   path: "/tools/motto-generator",
   modifiedTime: PAGE_MODIFIED,
   publishedTime: PAGE_PUBLISHED,
   keywords:
-    "motto generator, motto generator free, free motto generator, ai motto generator, family motto generator, business motto generator, company motto generator, school motto generator, free ai motto generator, motto maker, motto creator, motto generator ai, free motto maker, family motto maker",
+    "motto generator, motto generator free, free motto generator, ai motto generator, family motto generator, latin motto generator, latin family motto generator, random motto generator, short family motto generator, business motto generator, company motto generator, school motto generator, free ai motto generator, motto maker, motto creator, motto generator ai, free motto maker, family motto maker",
 });
 
 const FAQ_ITEMS: { q: string; a: string }[] = [
@@ -91,7 +91,7 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   },
   {
     q: "Can I create a Latin motto?",
-    a: "This tool generates English mottos by default, but you can ask for Latin-style framing by describing the feel you want (formal, timeless, military, academic). If you need a true Latin phrase, generate English options first then have a Latin scholar or translator render your favorite into classical Latin for authenticity.",
+    a: "Yes. Set Language to Latin and the generator writes 8 mottos in classical Latin, in the style of heraldic and school mottos like Fortis et Liber, each with an English translation underneath. For a family crest, engraving, or anything permanent, have a Latin teacher or translator confirm the grammar of your favorite before you use it.",
   },
 ];
 
@@ -134,7 +134,7 @@ function MottoGeneratorSchema() {
       "@type": "SoftwareApplication",
       name: "Motto Generator",
       url: pageUrl,
-      applicationCategory: "UtilityApplication",
+      applicationCategory: "UtilitiesApplication",
       operatingSystem: "Web",
       browserRequirements: "Requires a modern browser with JavaScript enabled",
       offers: {
@@ -142,17 +142,11 @@ function MottoGeneratorSchema() {
         price: "0",
         priceCurrency: "USD",
       },
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.8",
-        ratingCount: "127",
-        bestRating: "5",
-        worstRating: "1",
-      },
       description:
         "Free AI motto generator that creates inspiring, values-driven mottos for families, businesses, schools, companies, and individuals in seconds. Also works for sports teams, clubs, and non-profits.",
       featureList: [
         "8 unique motto options per generation",
+        "Latin motto mode with English translations",
         "Family, business, company, school, and personal motto modes",
         "AI trained on timeless mottos like Semper Fidelis and Carpe Diem",
         "Tone slider (serious to bold)",
@@ -361,13 +355,13 @@ export default function MottoGeneratorPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <div className="inline-flex items-center justify-center px-4 py-2 mb-6 rounded-[48px] bg-muted/50 border border-border text-label text-muted-foreground">
-                FREE AI TOOL - UPDATED APRIL 2026
+                FREE AI TOOL - UPDATED OCTOBER 2026
               </div>
               <h1 className="text-h1 text-foreground mb-6 text-balance">
-                Free AI Motto Generator for Family, Business, School & Personal Mottos
+                Free AI Motto Generator for Family, Latin, School & Personal Mottos
               </h1>
               <p className="text-[18px] sm:text-[20px] leading-relaxed text-muted-foreground max-w-2xl mx-auto mb-4 text-balance">
-                Generate 8 values-driven mottos in under 10 seconds. Works for family mottos, business and company mottos, school mottos, personal life mottos, and sports team rally cries.
+                Generate 8 values-driven mottos in under 10 seconds. Works for family mottos, Latin mottos with English translations, business and company mottos, school mottos, personal life mottos, and sports team rally cries.
               </p>
               <p className="text-[15px] font-medium text-muted-foreground/80 mb-12">
                 No signup. No credit card. Just the words you want to live by.
@@ -836,7 +830,7 @@ export default function MottoGeneratorPage() {
       <section className="border-t border-border bg-muted/30 py-20 sm:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="text-center mb-10 animate-reveal">
-            <h2 className="text-h3 text-foreground">More Free AI Tools From KolaviStudio</h2>
+            <h2 className="text-h3 text-foreground">More Free AI Tools From Kolavi Studio</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-reveal" style={{ animationDelay: "100ms" }}>
             {[

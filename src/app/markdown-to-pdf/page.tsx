@@ -1,6 +1,7 @@
 import { getPageMetadata } from "@/lib/seo/metadata";
 import { getBreadcrumbSchema } from "@/lib/seo/jsonld/breadcrumb";
-import { getFAQSchema } from "@/lib/seo/jsonld/faq";
+import { getFAQSchema, type FAQItem } from "@/lib/seo/jsonld/faq";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { MarkdownToPdfClient } from "./client";
 
 export const metadata = getPageMetadata({
@@ -12,6 +13,29 @@ export const metadata = getPageMetadata({
     "markdown to pdf, convert markdown to pdf, markdown pdf converter, markdown to pdf online, md to pdf",
 });
 
+const FAQS: FAQItem[] = [
+  {
+    question: "How do I convert markdown to PDF?",
+    answer:
+      "Paste or type your markdown content into the editor, choose a theme and page size, then click the convert button. Your PDF will be generated instantly in the browser and ready to download.",
+  },
+  {
+    question: "What themes are available for the PDF output?",
+    answer:
+      "The converter includes several built-in themes such as a clean default style, a GitHub-inspired theme, and a minimal document layout. Each theme controls typography, spacing, and heading styles in the final PDF.",
+  },
+  {
+    question: "Can I choose the page size for my PDF?",
+    answer:
+      "Yes. You can select from standard page sizes including Letter, A4, and Legal before generating your PDF. The content will reflow to fit the chosen dimensions.",
+  },
+  {
+    question: "Is this markdown to PDF converter free to use?",
+    answer:
+      "Yes. The tool is completely free with no account or signup required. All processing happens in your browser, so your documents stay private and are never uploaded to a server.",
+  },
+];
+
 export default function MarkdownToPdfPage() {
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Home", url: "/" },
@@ -19,35 +43,14 @@ export default function MarkdownToPdfPage() {
     { name: "Markdown to PDF", url: "/markdown-to-pdf" },
   ]);
 
-  const faqSchema = getFAQSchema([
-    {
-      question: "How do I convert markdown to PDF?",
-      answer:
-        "Paste or type your markdown content into the editor, choose a theme and page size, then click the convert button. Your PDF will be generated instantly in the browser and ready to download.",
-    },
-    {
-      question: "What themes are available for the PDF output?",
-      answer:
-        "The converter includes several built-in themes such as a clean default style, a GitHub-inspired theme, and a minimal document layout. Each theme controls typography, spacing, and heading styles in the final PDF.",
-    },
-    {
-      question: "Can I choose the page size for my PDF?",
-      answer:
-        "Yes. You can select from standard page sizes including Letter, A4, and Legal before generating your PDF. The content will reflow to fit the chosen dimensions.",
-    },
-    {
-      question: "Is this markdown to PDF converter free to use?",
-      answer:
-        "Yes. The tool is completely free with no account or signup required. All processing happens in your browser, so your documents stay private and are never uploaded to a server.",
-    },
-  ]);
+  const faqSchema = getFAQSchema(FAQS);
 
   const appSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Markdown to PDF Converter",
     url: "https://kolavistudio.com/markdown-to-pdf",
-    applicationCategory: "Utility",
+    applicationCategory: "UtilitiesApplication",
     operatingSystem: "Any",
     offers: {
       "@type": "Offer",
@@ -79,6 +82,9 @@ export default function MarkdownToPdfPage() {
         }}
       />
       <MarkdownToPdfClient />
+      <div className="mx-auto max-w-4xl px-4 pb-16 sm:px-6 lg:px-8">
+        <FaqSection items={FAQS} />
+      </div>
     </>
   );
 }

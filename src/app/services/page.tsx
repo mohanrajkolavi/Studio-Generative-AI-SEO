@@ -194,7 +194,8 @@ export default function ServicesPage() {
               return (
                 <div
                   key={service.id}
-                  className="group relative rounded-[32px] border border-border bg-card p-8 sm:p-12 lg:p-16 shadow-premium hover:shadow-xl transition-all duration-500 animate-reveal overflow-hidden"
+                  id={service.id}
+                  className="scroll-mt-24 group relative rounded-[32px] border border-border bg-card p-8 sm:p-12 lg:p-16 shadow-premium hover:shadow-xl transition-all duration-500 animate-reveal overflow-hidden"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/10 transition-colors duration-500 pointer-events-none" />

@@ -6,6 +6,10 @@ const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "tr
 
 const nextConfig: NextConfig = {
   trailingSlash: false,
+  // Inlined at build time so sitemap <lastmod> reflects the deploy, not each regeneration.
+  env: {
+    BUILD_TIMESTAMP: process.env.BUILD_TIMESTAMP || new Date().toISOString(),
+  },
   outputFileTracingRoot: path.join(__dirname),
   experimental: {
     optimizePackageImports: [
@@ -26,7 +30,16 @@ const nextConfig: NextConfig = {
     inlineCss: false,
   },
   async redirects() {
-    return [{ source: "/medical-spas", destination: "/", permanent: true }];
+    return [
+      { source: "/medical-spas", destination: "/", permanent: true },
+      // Consolidate www onto the canonical apex host (GSC shows www URLs being indexed).
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.kolavistudio.com" }],
+        destination: "https://kolavistudio.com/:path*",
+        permanent: true,
+      },
+    ];
   },
   async rewrites() {
     return [

@@ -217,6 +217,7 @@ function EmailGeneratorSchema() {
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
+      "@id": `${pageUrl}#app`,
       name: "AI Email Generator",
       url: pageUrl,
       applicationCategory: "BusinessApplication",
@@ -257,9 +258,9 @@ function EmailGeneratorSchema() {
       "@type": "HowTo",
       name: "How to generate a professional email with AI",
       description:
-        "Generate a professional email in 10 seconds using the free KolaviStudio AI Email Generator.",
+        "Generate a professional email in 10 seconds using the free Kolavi Studio AI Email Generator.",
       totalTime: "PT10S",
-      tool: [{ "@type": "HowToTool", name: "KolaviStudio AI Email Generator" }],
+      tool: [{ "@type": "HowToTool", name: "Kolavi Studio AI Email Generator" }],
       step: [
         {
           "@type": "HowToStep",
@@ -296,8 +297,8 @@ function EmailGeneratorSchema() {
       description:
         "Free AI email generator for cold outreach, follow-ups, replies, subject lines, and signatures. 15 email types, 3 variants per generation, no signup.",
       primaryImageOfPage: `${base}/og-image.jpg`,
-      mainEntity: { "@id": pageUrl },
-      isPartOf: { "@id": `${base}#website` },
+      mainEntity: { "@id": `${pageUrl}#app` },
+      isPartOf: { "@type": "WebSite", name: "Kolavi Studio", url: base },
     },
   ];
 
@@ -1026,7 +1027,7 @@ export default function EmailGeneratorPage() {
       <section className="border-t border-border bg-muted/30 py-20 sm:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="text-center mb-10 animate-reveal">
-            <h2 className="text-h3 text-foreground">More Free AI Tools From KolaviStudio</h2>
+            <h2 className="text-h3 text-foreground">More Free AI Tools From Kolavi Studio</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-reveal" style={{ animationDelay: "100ms" }}>
             {[

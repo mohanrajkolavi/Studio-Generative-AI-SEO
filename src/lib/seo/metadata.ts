@@ -48,6 +48,22 @@ export function getBaseMetadata(): Metadata {
   };
 }
 
+/** Google truncates titles at roughly 60 characters (~600px). */
+const MAX_TITLE_WITH_SUFFIX = 60;
+
+/**
+ * Applies the root layout's "%s | Kolavi Studio" template only when it helps:
+ * titles that already name the brand, or that would overflow the SERP width with
+ * the suffix, are emitted as absolute titles so the keyword-bearing text survives.
+ */
+export function getDocumentTitle(title: string): Metadata["title"] {
+  const suffixed = `${title} | ${SITE_NAME}`;
+  if (title.includes(SITE_NAME) || suffixed.length > MAX_TITLE_WITH_SUFFIX) {
+    return { absolute: title };
+  }
+  return title;
+}
+
 interface PageMetadataProps {
   title: string;
   description: string;
@@ -95,7 +111,7 @@ export function getPageMetadata({
   const twImage = twitterImage ?? ogImage;
 
   return {
-    title,
+    title: getDocumentTitle(title),
     description,
     keywords,
     authors: author ? [{ name: author }] : undefined,

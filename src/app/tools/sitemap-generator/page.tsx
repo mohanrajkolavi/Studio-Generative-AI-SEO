@@ -36,6 +36,53 @@ export const metadata = getPageMetadata({
     "xml sitemap generator, free xml sitemap generator, online sitemap xml generator, crawl sitemap, generate xml sitemap online, sitemap generator free, website sitemap generator free, sitemap creator online",
 });
 
+const FAQ_ITEMS: { q: string; a: string }[] = [
+  {
+    q: "What is a sitemap generator?",
+    a: "A sitemap generator is a tool that automatically crawls your website, discovers all accessible pages, and creates an XML file listing every URL. This file tells search engines like Google which pages exist on your site, how often they change, and which pages are most important. You submit this file through Google Search Console to help search engines index your content faster.",
+  },
+  {
+    q: "How does this XML sitemap generator work?",
+    a: "Enter your website URL, set crawl depth and max pages, then click Generate. Our crawler visits your site, follows internal links using breadth-first search, respects your robots.txt rules, and discovers every accessible page. It then generates a standard XML sitemap with proper formatting, priority values, and change frequency tags - ready to download or copy.",
+  },
+  {
+    q: "How do I crawl a website to build a sitemap?",
+    a: "Enter the website URL, click Generate, and our crawler walks every internal link from that root using breadth-first search. It respects robots.txt, skips duplicate URLs, and stops at your configured depth limit (1-5 levels) or page cap (up to 500 URLs). The result is a downloadable XML sitemap of every reachable page, no signup required.",
+  },
+  {
+    q: "Is this sitemap generator free?",
+    a: "Yes, completely free. No signup, no credit card, no hidden limits on file size. You can generate sitemaps with up to 500 URLs per crawl, 3 times per day.",
+  },
+  {
+    q: "What is an XML sitemap?",
+    a: "An XML sitemap is a file (usually named sitemap.xml) that lists all the important URLs on your website in a format that search engines can read. It follows the sitemaps.org protocol and includes metadata like last modification date, change frequency, and priority for each URL. Search engines use this file to discover and crawl your pages more efficiently.",
+  },
+  {
+    q: "How do I submit my sitemap to Google?",
+    a: "After generating and downloading your sitemap.xml, upload it to the root of your website (e.g., https://yoursite.com/sitemap.xml). Then go to Google Search Console, select your property, navigate to Sitemaps in the left menu, enter your sitemap URL, and click Submit. Google will begin processing it and indexing your pages.",
+  },
+  {
+    q: "What is the maximum number of URLs?",
+    a: "Per the sitemaps.org protocol, a single XML sitemap file can contain up to 50,000 URLs and must not exceed 50MB uncompressed. Our free tool generates sitemaps with up to 500 URLs per crawl. For larger sites, you can split your sitemap into multiple files and reference them in a sitemap index file.",
+  },
+  {
+    q: "Does this tool respect robots.txt?",
+    a: "Yes. Before crawling, we fetch and parse your site's robots.txt file. Any paths marked as Disallow for our user agent or the wildcard (*) agent are excluded from the crawl. This ensures the generated sitemap only includes pages you want search engines to access.",
+  },
+  {
+    q: "How often should I regenerate my sitemap?",
+    a: "Regenerate your sitemap whenever you add, remove, or significantly restructure pages on your site. For active blogs or e-commerce sites, monthly regeneration is a good practice. Many CMS platforms generate sitemaps automatically, but a standalone generator is useful for manual checks and custom configurations.",
+  },
+  {
+    q: "What is sitemap priority and change frequency?",
+    a: "Priority is a value from 0.0 to 1.0 that tells search engines how important a page is relative to other pages on your site. Change frequency (changefreq) hints how often a page is likely updated - daily, weekly, monthly, or yearly. Search engines treat these as hints, not directives. Our tool auto-calculates priority based on page depth: homepage gets 1.0, top-level pages 0.8, deeper pages progressively lower.",
+  },
+  {
+    q: "Can I generate a sitemap for a site I don't own?",
+    a: "Technically yes - the tool crawls any publicly accessible website. This is useful for competitive analysis, SEO audits, or understanding a site's structure. However, you should only submit a sitemap to Google Search Console for sites you own or manage.",
+  },
+];
+
 /** JSON-LD schema for rich results. */
 function SitemapGeneratorSchema() {
   const base = SITE_URL ?? "https://kolavistudio.com";
@@ -54,7 +101,7 @@ function SitemapGeneratorSchema() {
       "@type": "SoftwareApplication",
       name: "XML Sitemap Generator",
       url: `${base}/tools/sitemap-generator`,
-      applicationCategory: "UtilityApplication",
+      applicationCategory: "UtilitiesApplication",
       operatingSystem: "Web",
       offers: {
         "@type": "Offer",
@@ -75,96 +122,11 @@ function SitemapGeneratorSchema() {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "What is a sitemap generator?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A sitemap generator is a tool that automatically crawls your website, discovers all accessible pages, and creates an XML file listing every URL. This XML sitemap file tells search engines like Google which pages exist on your site, how often they change, and which pages are most important. You submit this file through Google Search Console to help search engines index your content faster and more completely.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does this XML sitemap generator work?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Enter your website URL, set crawl depth and max pages, then click Generate. Our crawler visits your site, follows internal links using breadth-first search, respects your robots.txt rules, and discovers every accessible page. It then generates a standard XML sitemap with proper formatting, priority values, and change frequency tags - ready to download or copy.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How do I crawl a website to build a sitemap?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Enter the website URL, click Generate, and our crawler walks every internal link from that root using breadth-first search. It respects robots.txt, skips duplicate URLs, and stops at your configured depth limit (1-5 levels) or page cap (up to 500 URLs). The result is a downloadable XML sitemap of every reachable page, no signup required.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is this sitemap generator free?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, completely free. No signup, no credit card, no hidden limits on file size. You can generate sitemaps with up to 500 URLs per crawl, 3 times per day.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is an XML sitemap?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "An XML sitemap is a file (usually named sitemap.xml) that lists all the important URLs on your website in a format that search engines can read. It follows the sitemaps.org protocol and includes metadata like last modification date, change frequency, and priority for each URL. Search engines use this file to discover and crawl your pages more efficiently.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How do I submit my sitemap to Google?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "After generating and downloading your sitemap.xml, upload it to the root of your website (e.g., https://yoursite.com/sitemap.xml). Then go to Google Search Console, select your property, navigate to Sitemaps in the left menu, enter your sitemap URL, and click Submit. Google will begin processing it and indexing your pages.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is the maximum number of URLs in a sitemap?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Per the sitemaps.org protocol, a single XML sitemap file can contain up to 50,000 URLs and must not exceed 50MB uncompressed. Our free tool generates sitemaps with up to 500 URLs per crawl. For larger sites, you can split your sitemap into multiple files and reference them in a sitemap index file.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Does this tool respect robots.txt?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Before crawling, we fetch and parse your site's robots.txt file. Any paths marked as Disallow for our user agent or the wildcard (*) agent are excluded from the crawl. This ensures the generated sitemap only includes pages you want search engines to access.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How often should I regenerate my sitemap?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Regenerate your sitemap whenever you add, remove, or significantly restructure pages on your site. For active blogs or e-commerce sites, monthly regeneration is a good practice. Many CMS platforms generate sitemaps automatically, but a standalone generator is useful for manual checks and custom configurations.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is sitemap priority and change frequency?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Priority is a value from 0.0 to 1.0 that tells search engines how important a page is relative to other pages on your site. Change frequency (changefreq) hints how often a page is likely updated - daily, weekly, monthly, or yearly. Note that search engines treat these as hints, not directives. Our tool auto-calculates priority based on page depth: homepage gets 1.0, top-level pages 0.8, deeper pages progressively lower.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can I generate a sitemap for a site I don't own?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Technically yes - the tool crawls any publicly accessible website. This is useful for competitive analysis, SEO audits, or understanding a site's structure. However, you should only submit a sitemap to Google Search Console for sites you own or manage. Our crawler respects robots.txt and uses reasonable rate limiting to avoid impacting target sites.",
-          },
-        },
-      ],
+      mainEntity: FAQ_ITEMS.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
     },
     {
       "@context": "https://schema.org",
@@ -754,52 +716,7 @@ export default function SitemapGeneratorPage() {
             </h2>
           </div>
           <div className="space-y-4 animate-reveal" style={{ animationDelay: "100ms" }}>
-            {[
-              {
-                q: "What is a sitemap generator?",
-                a: "A sitemap generator is a tool that automatically crawls your website, discovers all accessible pages, and creates an XML file listing every URL. This file tells search engines like Google which pages exist on your site, how often they change, and which pages are most important. You submit this file through Google Search Console to help search engines index your content faster.",
-              },
-              {
-                q: "How does this XML sitemap generator work?",
-                a: "Enter your website URL, set crawl depth and max pages, then click Generate. Our crawler visits your site, follows internal links using breadth-first search, respects your robots.txt rules, and discovers every accessible page. It then generates a standard XML sitemap with proper formatting, priority values, and change frequency tags - ready to download or copy.",
-              },
-              {
-                q: "How do I crawl a website to build a sitemap?",
-                a: "Enter the website URL, click Generate, and our crawler walks every internal link from that root using breadth-first search. It respects robots.txt, skips duplicate URLs, and stops at your configured depth limit (1-5 levels) or page cap (up to 500 URLs). The result is a downloadable XML sitemap of every reachable page, no signup required.",
-              },
-              {
-                q: "Is this sitemap generator free?",
-                a: "Yes, completely free. No signup, no credit card, no hidden limits on file size. You can generate sitemaps with up to 500 URLs per crawl, 3 times per day.",
-              },
-              {
-                q: "What is an XML sitemap?",
-                a: "An XML sitemap is a file (usually named sitemap.xml) that lists all the important URLs on your website in a format that search engines can read. It follows the sitemaps.org protocol and includes metadata like last modification date, change frequency, and priority for each URL. Search engines use this file to discover and crawl your pages more efficiently.",
-              },
-              {
-                q: "How do I submit my sitemap to Google?",
-                a: "After generating and downloading your sitemap.xml, upload it to the root of your website (e.g., https://yoursite.com/sitemap.xml). Then go to Google Search Console, select your property, navigate to Sitemaps in the left menu, enter your sitemap URL, and click Submit. Google will begin processing it and indexing your pages.",
-              },
-              {
-                q: "What is the maximum number of URLs?",
-                a: "Per the sitemaps.org protocol, a single XML sitemap file can contain up to 50,000 URLs and must not exceed 50MB uncompressed. Our free tool generates sitemaps with up to 500 URLs per crawl. For larger sites, you can split your sitemap into multiple files and reference them in a sitemap index file.",
-              },
-              {
-                q: "Does this tool respect robots.txt?",
-                a: "Yes. Before crawling, we fetch and parse your site's robots.txt file. Any paths marked as Disallow for our user agent or the wildcard (*) agent are excluded from the crawl. This ensures the generated sitemap only includes pages you want search engines to access.",
-              },
-              {
-                q: "How often should I regenerate my sitemap?",
-                a: "Regenerate your sitemap whenever you add, remove, or significantly restructure pages on your site. For active blogs or e-commerce sites, monthly regeneration is a good practice. Many CMS platforms generate sitemaps automatically, but a standalone generator is useful for manual checks and custom configurations.",
-              },
-              {
-                q: "What is sitemap priority and change frequency?",
-                a: "Priority is a value from 0.0 to 1.0 that tells search engines how important a page is relative to other pages on your site. Change frequency (changefreq) hints how often a page is likely updated - daily, weekly, monthly, or yearly. Search engines treat these as hints, not directives. Our tool auto-calculates priority based on page depth: homepage gets 1.0, top-level pages 0.8, deeper pages progressively lower.",
-              },
-              {
-                q: "Can I generate a sitemap for a site I don't own?",
-                a: "Technically yes - the tool crawls any publicly accessible website. This is useful for competitive analysis, SEO audits, or understanding a site's structure. However, you should only submit a sitemap to Google Search Console for sites you own or manage.",
-              },
-            ].map((faq) => (
+            {FAQ_ITEMS.map((faq) => (
               <details
                 key={faq.q}
                 className="group rounded-[20px] border border-border bg-card shadow-sm overflow-hidden"
@@ -848,7 +765,7 @@ export default function SitemapGeneratorPage() {
                 href: "/tools",
                 icon: Sparkles,
                 title: "All Free Tools",
-                description: "ROI calculators, competitor comparison, treatment analyzers, and more SEO tools. All free.",
+                description: "Speed audit, AI bio, email, slogan, and motto generators, plus Markdown and YAML toolkits. All free.",
                 cta: "Browse All Tools",
               },
             ].map((tool) => {

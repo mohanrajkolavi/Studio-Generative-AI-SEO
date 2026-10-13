@@ -32,6 +32,49 @@ export const metadata = getPageMetadata({
     "ai bio generator, free ai bio generator, bio generator, ai professional bio generator, bio ai generator, instagram bio generator, bio maker, free bio generator, linkedin bio generator, twitter bio generator, aesthetic bio maker, social media bio generator",
 });
 
+const FAQ_ITEMS: { q: string; a: string }[] = [
+  {
+    q: "How does the AI Bio Generator work?",
+    a: "Enter your name, role, and optionally your achievements, skills, and personality traits. Select which platforms you need bios for, set your preferred tone and target audience, then click Generate. The AI creates a unique, optimized bio for each platform  - respecting character limits and adapting style (professional for LinkedIn, punchy for Twitter, emoji-friendly for Instagram).",
+  },
+  {
+    q: "Is the AI Bio Generator really free?",
+    a: "Yes, completely free. No signup, no credit card, no hidden limits. Generate as many bios as you need across all 10 supported platforms.",
+  },
+  {
+    q: "What platforms are supported?",
+    a: "LinkedIn Headline (120 chars), LinkedIn About (2,000 chars), Twitter/X (160 chars), Instagram (150 chars), TikTok (80 chars), Facebook (101 chars), GitHub (160 chars), Professional/Website (500 chars), Email Signature (200 chars), and Threads (150 chars).",
+  },
+  {
+    q: "Will the bios sound generic or AI-written?",
+    a: "No. The generator avoids cliches like \"passionate about\" or \"dedicated to.\" It uses your actual achievements, skills, and personality to create specific, human-sounding bios. Each platform bio is uniquely crafted  - not a shorter version of the same text.",
+  },
+  {
+    q: "Can I customize the tone?",
+    a: "Yes. Choose from 5 tone levels: Very Formal, Professional, Balanced, Casual, or Bold & Witty. You can also target specific audiences  - recruiters, potential clients, collaborators, or social followers  - and the AI adjusts its language accordingly.",
+  },
+  {
+    q: "How is this different from ChatGPT or other AI bio tools?",
+    a: "Most tools generate one bio at a time with no character limit awareness. This tool generates all your platform bios simultaneously, enforces exact character limits, adapts style per platform, and lets you target specific audiences  - all from a single form input.",
+  },
+  {
+    q: "What is an AI bio generator?",
+    a: "An AI bio generator is a tool that uses artificial intelligence to write short biographical descriptions for your social media profiles, websites, and portfolios. You provide basic details about yourself  - name, role, achievements  - and the AI creates polished, ready-to-use bios optimized for each platform's style and character limits.",
+  },
+  {
+    q: "Can I use this for dating app profiles?",
+    a: "While optimized for professional and social media platforms, you can use the Instagram or TikTok output as a starting point for dating profiles. Set the tone to Casual or Bold & Witty, include personality traits, and the AI generates something personal and engaging that you can adapt.",
+  },
+  {
+    q: "How do I make my AI-generated bio sound authentic?",
+    a: "Specific inputs create authentic outputs. Instead of \"marketing professional,\" try \"B2B SaaS marketer who grew pipeline 3x at a Series B startup.\" Add personality traits, hobbies, or a fun fact. Then edit the result  - swap in your favorite phrase or add an inside reference only your audience would get.",
+  },
+  {
+    q: "What information should I include for the best results?",
+    a: "At minimum: your name and current role. For the best bios, also add 1-2 key achievements with numbers, your top skills or tools, your industry, and a personality trait or hobby. The more context the AI has, the more specific and compelling your bio will be.",
+  },
+];
+
 /** JSON-LD SoftwareApplication + FAQPage schema for rich results. */
 function BioGeneratorSchema() {
   const base = SITE_URL ?? "https://kolavistudio.com";
@@ -50,7 +93,7 @@ function BioGeneratorSchema() {
       "@type": "SoftwareApplication",
       name: "AI Bio Generator",
       url: `${base}/tools/bio-generator`,
-      applicationCategory: "UtilityApplication",
+      applicationCategory: "UtilitiesApplication",
       operatingSystem: "Web",
       offers: {
         "@type": "Offer",
@@ -71,80 +114,11 @@ function BioGeneratorSchema() {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "How does the AI Bio Generator work?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Enter your name, role, and optionally your achievements, skills, and personality traits. Select which platforms you need bios for, set your preferred tone and target audience, then click Generate. The AI creates a unique, optimized bio for each platform  - respecting character limits and adapting style (professional for LinkedIn, punchy for Twitter, emoji-friendly for Instagram).",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is the AI Bio Generator free?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes, completely free. No signup, no credit card, no hidden limits. Generate as many bios as you need across all supported platforms.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What platforms are supported?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LinkedIn Headline (120 chars), LinkedIn About (2,000 chars), Twitter/X (160 chars), Instagram (150 chars), TikTok (80 chars), Facebook (101 chars), GitHub (160 chars), Professional/Website (500 chars), Email Signature (200 chars), and Threads (150 chars).",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Will the bios sound generic or AI-written?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. The generator is specifically trained to avoid cliches like 'passionate about' or 'dedicated to'. It uses your actual achievements, skills, and personality to create specific, human-sounding bios. Each platform bio is written uniquely  - not a truncated version of the same text.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can I customize the tone of my bio?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Use the tone slider to choose from 5 levels: Very Formal, Professional, Balanced, Casual, or Bold & Witty. You can also target your bio for specific audiences: recruiters, potential clients, collaborators, or social followers.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is an AI bio generator?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "An AI bio generator is a tool that uses artificial intelligence to write short biographical descriptions for your social media profiles, professional websites, and online portfolios. Instead of staring at a blank text field, you provide basic information about yourself and the AI crafts polished, platform-optimized bios instantly.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can I use this for dating app profiles?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "While the tool is optimized for professional and social media platforms, you can use the Instagram or TikTok output as a starting point for dating profiles. Set the tone to Casual or Bold & Witty, include personality traits in the input, and the AI will generate something personal and engaging.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How do I make my AI-generated bio sound authentic?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "The key is specific inputs. Instead of 'marketing professional,' write 'B2B SaaS marketer who grew pipeline 3x at a Series B startup.' Add personality traits, hobbies, or a fun fact. The more specific your input, the more unique and authentic the output. You can also tweak the tone slider and edit the result to add your personal voice.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What information should I include for the best results?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "At minimum, provide your name and current role. For the best bios, also add: 1-2 key achievements with numbers, your top skills or tools, your industry, and a personality trait or hobby. The more context the AI has, the more specific and compelling your bio will be.",
-          },
-        },
-      ],
+      mainEntity: FAQ_ITEMS.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
     },
   ];
 
@@ -634,48 +608,7 @@ export default function BioGeneratorPage() {
             </h2>
           </div>
           <div className="space-y-4 animate-reveal" style={{ animationDelay: "100ms" }}>
-            {[
-              {
-                q: "How does the AI Bio Generator work?",
-                a: "Enter your name, role, and optionally your achievements, skills, and personality traits. Select which platforms you need bios for, set your preferred tone and target audience, then click Generate. The AI creates a unique, optimized bio for each platform  - respecting character limits and adapting style (professional for LinkedIn, punchy for Twitter, emoji-friendly for Instagram).",
-              },
-              {
-                q: "Is the AI Bio Generator really free?",
-                a: "Yes, completely free. No signup, no credit card, no hidden limits. Generate as many bios as you need across all 10 supported platforms.",
-              },
-              {
-                q: "What platforms are supported?",
-                a: "LinkedIn Headline (120 chars), LinkedIn About (2,000 chars), Twitter/X (160 chars), Instagram (150 chars), TikTok (80 chars), Facebook (101 chars), GitHub (160 chars), Professional/Website (500 chars), Email Signature (200 chars), and Threads (150 chars).",
-              },
-              {
-                q: "Will the bios sound generic or AI-written?",
-                a: "No. The generator avoids cliches like \"passionate about\" or \"dedicated to.\" It uses your actual achievements, skills, and personality to create specific, human-sounding bios. Each platform bio is uniquely crafted  - not a shorter version of the same text.",
-              },
-              {
-                q: "Can I customize the tone?",
-                a: "Yes. Choose from 5 tone levels: Very Formal, Professional, Balanced, Casual, or Bold & Witty. You can also target specific audiences  - recruiters, potential clients, collaborators, or social followers  - and the AI adjusts its language accordingly.",
-              },
-              {
-                q: "How is this different from ChatGPT or other AI bio tools?",
-                a: "Most tools generate one bio at a time with no character limit awareness. This tool generates all your platform bios simultaneously, enforces exact character limits, adapts style per platform, and lets you target specific audiences  - all from a single form input.",
-              },
-              {
-                q: "What is an AI bio generator?",
-                a: "An AI bio generator is a tool that uses artificial intelligence to write short biographical descriptions for your social media profiles, websites, and portfolios. You provide basic details about yourself  - name, role, achievements  - and the AI creates polished, ready-to-use bios optimized for each platform's style and character limits.",
-              },
-              {
-                q: "Can I use this for dating app profiles?",
-                a: "While optimized for professional and social media platforms, you can use the Instagram or TikTok output as a starting point for dating profiles. Set the tone to Casual or Bold & Witty, include personality traits, and the AI generates something personal and engaging that you can adapt.",
-              },
-              {
-                q: "How do I make my AI-generated bio sound authentic?",
-                a: "Specific inputs create authentic outputs. Instead of \"marketing professional,\" try \"B2B SaaS marketer who grew pipeline 3x at a Series B startup.\" Add personality traits, hobbies, or a fun fact. Then edit the result  - swap in your favorite phrase or add an inside reference only your audience would get.",
-              },
-              {
-                q: "What information should I include for the best results?",
-                a: "At minimum: your name and current role. For the best bios, also add 1-2 key achievements with numbers, your top skills or tools, your industry, and a personality trait or hobby. The more context the AI has, the more specific and compelling your bio will be.",
-              },
-            ].map((faq) => (
+            {FAQ_ITEMS.map((faq) => (
               <details
                 key={faq.q}
                 className="group rounded-[20px] border border-border bg-card shadow-sm overflow-hidden"
@@ -697,7 +630,7 @@ export default function BioGeneratorPage() {
       <section className="border-t border-border bg-muted/30 py-20 sm:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="text-center mb-10 animate-reveal">
-            <h2 className="text-h3 text-foreground">More Free AI Tools From KolaviStudio</h2>
+            <h2 className="text-h3 text-foreground">More Free AI Tools From Kolavi Studio</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-reveal" style={{ animationDelay: "100ms" }}>
             {[

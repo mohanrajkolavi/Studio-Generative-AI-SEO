@@ -203,9 +203,10 @@ export function getStaticEntries(): UrlEntry[] {
     };
   });
 
-  // Dynamic markdown tool pages from tools-data.ts
+  // Dynamic markdown tool pages from tools-data.ts. Slugs with a bespoke page
+  // (e.g. /markdown-tools/obsidian) are already in DISCOVERED_ROUTES.
   const toolEntries: UrlEntry[] = MARKDOWN_TOOLS
-    .filter((tool) => !tool.externalPath)
+    .filter((tool) => !tool.externalPath && !DISCOVERED_ROUTES.includes(`/markdown-tools/${tool.slug}`))
     .map((tool) => ({
       path: `/markdown-tools/${tool.slug}`,
       lastModified,

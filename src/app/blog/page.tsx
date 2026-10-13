@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch (e) {
     console.error("Blog generateMetadata:", e);
     return {
-      title: "Blog | Kolavi Studio",
+      title: "Blog",
       description: "Digital marketing insights and resources.",
     };
   }

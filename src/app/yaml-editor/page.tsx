@@ -92,7 +92,7 @@ export default function YamlEditorPage() {
     applicationCategory: "DeveloperApplication",
     url: PAGE_URL,
     offers: { price: "0", currency: "USD" },
-    author: { name: "KolaviStudio", url: "https://kolavistudio.com" },
+    author: { name: "Kolavi Studio", url: "https://kolavistudio.com" },
   });
 
   const howToSchema = getHowToSchema({
@@ -102,7 +102,7 @@ export default function YamlEditorPage() {
     steps: [
       {
         name: "Open the editor",
-        text: "Navigate to the YAML Editor page on KolaviStudio.",
+        text: "Navigate to the YAML Editor page on Kolavi Studio.",
         url: PAGE_PATH,
       },
       {

@@ -1,6 +1,7 @@
 import { getPageMetadata } from "@/lib/seo/metadata";
 import { getBreadcrumbSchema } from "@/lib/seo/jsonld/breadcrumb";
-import { getFAQSchema } from "@/lib/seo/jsonld/faq";
+import { getFAQSchema, type FAQItem } from "@/lib/seo/jsonld/faq";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { MarkdownFormatterClient } from "./client";
 
 export const metadata = getPageMetadata({
@@ -12,6 +13,29 @@ export const metadata = getPageMetadata({
     "markdown formatter, markdown beautifier, format markdown, markdown linter, clean up markdown, markdown prettifier",
 });
 
+const FAQS: FAQItem[] = [
+  {
+    question: "What does the markdown formatter fix?",
+    answer:
+      "The formatter normalizes heading levels, fixes inconsistent list indentation, removes trailing whitespace, ensures blank lines between blocks, and standardizes emphasis markers. It produces clean, consistent markdown that follows common style conventions.",
+  },
+  {
+    question: "Can I see what the formatter changed?",
+    answer:
+      "Yes. After formatting, a diff view highlights every change made to your document. Added lines appear in green and removed lines appear in red, so you can review each modification before copying the result.",
+  },
+  {
+    question: "What is format on paste?",
+    answer:
+      "Format on paste automatically cleans up markdown as soon as you paste it into the editor. This saves a step when you are working with markdown copied from other sources that may have inconsistent formatting.",
+  },
+  {
+    question: "Is my data private when using the formatter?",
+    answer:
+      "Yes. All formatting is performed entirely in your browser using client-side JavaScript. Your markdown content is never sent to a server, so your documents remain completely private.",
+  },
+];
+
 export default function MarkdownFormatterPage() {
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Home", url: "/" },
@@ -19,35 +43,14 @@ export default function MarkdownFormatterPage() {
     { name: "Markdown Formatter", url: "/markdown-formatter" },
   ]);
 
-  const faqSchema = getFAQSchema([
-    {
-      question: "What does the markdown formatter fix?",
-      answer:
-        "The formatter normalizes heading levels, fixes inconsistent list indentation, removes trailing whitespace, ensures blank lines between blocks, and standardizes emphasis markers. It produces clean, consistent markdown that follows common style conventions.",
-    },
-    {
-      question: "Can I see what the formatter changed?",
-      answer:
-        "Yes. After formatting, a diff view highlights every change made to your document. Added lines appear in green and removed lines appear in red, so you can review each modification before copying the result.",
-    },
-    {
-      question: "What is format on paste?",
-      answer:
-        "Format on paste automatically cleans up markdown as soon as you paste it into the editor. This saves a step when you are working with markdown copied from other sources that may have inconsistent formatting.",
-    },
-    {
-      question: "Is my data private when using the formatter?",
-      answer:
-        "Yes. All formatting is performed entirely in your browser using client-side JavaScript. Your markdown content is never sent to a server, so your documents remain completely private.",
-    },
-  ]);
+  const faqSchema = getFAQSchema(FAQS);
 
   const appSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Markdown Formatter and Beautifier",
     url: "https://kolavistudio.com/markdown-formatter",
-    applicationCategory: "Utility",
+    applicationCategory: "UtilitiesApplication",
     operatingSystem: "Any",
     offers: {
       "@type": "Offer",
@@ -79,6 +82,9 @@ export default function MarkdownFormatterPage() {
         }}
       />
       <MarkdownFormatterClient />
+      <div className="mx-auto max-w-4xl px-4 pb-16 sm:px-6 lg:px-8">
+        <FaqSection items={FAQS} />
+      </div>
     </>
   );
 }

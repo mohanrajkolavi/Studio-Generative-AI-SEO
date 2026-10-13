@@ -92,7 +92,7 @@ export default function YamlToJsonPage() {
     applicationCategory: "DeveloperApplication",
     url: PAGE_URL,
     offers: { price: "0", currency: "USD" },
-    author: { name: "KolaviStudio", url: "https://kolavistudio.com" },
+    author: { name: "Kolavi Studio", url: "https://kolavistudio.com" },
   });
 
   const howToSchema = getHowToSchema({
@@ -103,7 +103,7 @@ export default function YamlToJsonPage() {
     steps: [
       {
         name: "Open the converter",
-        text: "Navigate to the YAML to JSON converter page on KolaviStudio.",
+        text: "Navigate to the YAML to JSON converter page on Kolavi Studio.",
         url: PAGE_PATH,
       },
       {

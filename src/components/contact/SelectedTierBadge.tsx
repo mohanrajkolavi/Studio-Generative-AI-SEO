@@ -27,7 +27,6 @@ export function SelectedTierBadge() {
     >
       <p className="text-sm font-medium text-foreground">
         You selected: <span className="font-semibold text-orange-700 dark:text-orange-300">{tier.name}</span> tier
-        <span className="text-muted-foreground"> (${tier.setupFee.toLocaleString()} setup + ${tier.monthlyRetainer.toLocaleString()}/mo)</span>
       </p>
       <p className="mt-1 text-xs text-muted-foreground">
         We&apos;ll follow up with details for this tier.

@@ -92,7 +92,7 @@ export default function YamlFormatterPage() {
     applicationCategory: "DeveloperApplication",
     url: PAGE_URL,
     offers: { price: "0", currency: "USD" },
-    author: { name: "KolaviStudio", url: "https://kolavistudio.com" },
+    author: { name: "Kolavi Studio", url: "https://kolavistudio.com" },
   });
 
   const howToSchema = getHowToSchema({

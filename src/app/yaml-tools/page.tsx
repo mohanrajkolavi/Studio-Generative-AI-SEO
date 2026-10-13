@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getPageMetadata } from "@/lib/seo/metadata";
 import { getBreadcrumbSchema } from "@/lib/seo/jsonld/breadcrumb";
-import { getFAQSchema } from "@/lib/seo/jsonld/faq";
+import { getFAQSchema, type FAQItem } from "@/lib/seo/jsonld/faq";
+import { FaqSection } from "@/components/seo/FaqSection";
 import {
   CheckCircle2,
   ArrowRightLeft,
@@ -29,12 +30,12 @@ import { YAML_TOPICS } from "@/lib/yaml/tools-data";
 
 const PAGE_PATH = "/yaml-tools";
 const DATE_PUBLISHED = "2026-04-28T00:00:00Z";
-const DATE_MODIFIED = "2026-04-28T00:00:00Z";
+const DATE_MODIFIED = "2026-10-13T00:00:00Z";
 
 export const metadata = getPageMetadata({
-  title: "Free YAML Tools | Validator, Formatter, Converter & Editor",
+  title: "Free YAML Tools: Validator, Formatter, Converter, Diff",
   description:
-    "Free online YAML tools: validator, YAML to JSON converter, JSON to YAML converter, formatter, editor, and a complete YAML guide. No signup required, all processing in your browser.",
+    "Free online YAML tools: validator, YAML to JSON and JSON to YAML converters, formatter, editor, diff checker, and a YAML guide. Runs entirely in your browser.",
   path: PAGE_PATH,
   keywords:
     "yaml tools, yaml online tools, free yaml tools, yaml utilities, yaml editor online, yaml converter, yaml validator online",
@@ -91,6 +92,13 @@ const tools: ToolCard[] = [
       "Edit YAML in the browser with live validation, syntax highlighting, and localStorage autosave. No signup required.",
   },
   {
+    href: "/yaml-diff",
+    icon: GitCompareArrows,
+    name: "YAML Diff",
+    description:
+      "Compare two YAML files side by side with a line diff and a semantic diff that ignores formatting and key order. Runs in your browser.",
+  },
+  {
     href: "/yaml-guide",
     icon: BookOpen,
     name: "YAML Guide",
@@ -143,44 +151,46 @@ function ToolCardItem({ tool }: { tool: ToolCard }) {
   );
 }
 
+const FAQS: FAQItem[] = [
+  {
+    question: "What YAML tools are available here?",
+    answer:
+      "A YAML validator, YAML to JSON converter, JSON to YAML converter, YAML formatter and beautifier, browser YAML editor with autosave, a YAML diff checker, and a complete YAML guide. We also publish topic guides for comments, multiline strings, YAML vs JSON, .yml vs .yaml, and Python YAML errors.",
+  },
+  {
+    question: "Are these YAML tools free?",
+    answer:
+      "Yes. Every YAML tool is free with no limits, no watermarks, and no premium tiers. Use them as much as you need without paying anything or creating an account.",
+  },
+  {
+    question: "Is my YAML data private?",
+    answer:
+      "Yes. All YAML parsing, validation, and conversion happens entirely in your browser. Your YAML content is never sent to a server. Auto-saved drafts live in localStorage on your device only.",
+  },
+  {
+    question: "Which YAML version do these tools support?",
+    answer:
+      "The tools target YAML 1.2, the most current spec. They handle anchors, aliases, merge keys, multiline strings (literal | and folded >), tagged values, and standard scalar types.",
+  },
+  {
+    question: "What is YAML?",
+    answer:
+      "YAML stands for YAML Ain't Markup Language. It is a human-readable data serialization language used for configuration files, infrastructure-as-code, and data exchange between languages. YAML uses indentation instead of brackets, making it easier to read than JSON or XML for many config formats.",
+  },
+  {
+    question: "Can I convert YAML to JSON without losing data?",
+    answer:
+      "Yes for most cases. JSON supports all common YAML scalar types (strings, numbers, booleans, null), maps, and lists. YAML features that have no JSON equivalent - comments, anchors, custom tags, and multiple documents in one file - cannot be preserved during conversion.",
+  },
+];
+
 export default function YamlToolsHubPage() {
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Home", url: "/" },
     { name: "YAML Tools", url: "/yaml-tools" },
   ]);
 
-  const faqSchema = getFAQSchema([
-    {
-      question: "What YAML tools are available here?",
-      answer:
-        "A YAML validator, YAML to JSON converter, JSON to YAML converter, YAML formatter and beautifier, browser YAML editor with autosave, and a complete YAML guide. We also publish topic guides for comments, multiline strings, YAML vs JSON, .yml vs .yaml, and Python YAML errors.",
-    },
-    {
-      question: "Are these YAML tools free?",
-      answer:
-        "Yes. Every YAML tool is free with no limits, no watermarks, and no premium tiers. Use them as much as you need without paying anything or creating an account.",
-    },
-    {
-      question: "Is my YAML data private?",
-      answer:
-        "Yes. All YAML parsing, validation, and conversion happens entirely in your browser. Your YAML content is never sent to a server. Auto-saved drafts live in localStorage on your device only.",
-    },
-    {
-      question: "Which YAML version do these tools support?",
-      answer:
-        "The tools target YAML 1.2, the most current spec. They handle anchors, aliases, merge keys, multiline strings (literal | and folded >), tagged values, and standard scalar types.",
-    },
-    {
-      question: "What is YAML?",
-      answer:
-        "YAML stands for YAML Ain't Markup Language. It is a human-readable data serialization language used for configuration files, infrastructure-as-code, and data exchange between languages. YAML uses indentation instead of brackets, making it easier to read than JSON or XML for many config formats.",
-    },
-    {
-      question: "Can I convert YAML to JSON without losing data?",
-      answer:
-        "Yes for most cases. JSON supports all common YAML scalar types (strings, numbers, booleans, null), maps, and lists. YAML features that have no JSON equivalent - comments, anchors, custom tags, and multiple documents in one file - cannot be preserved during conversion.",
-    },
-  ]);
+  const faqSchema = getFAQSchema(FAQS);
 
   const appSchema = {
     "@context": "https://schema.org",
@@ -195,7 +205,7 @@ export default function YamlToolsHubPage() {
       priceCurrency: "USD",
     },
     description:
-      "Free online YAML tools: validator, YAML to JSON converter, JSON to YAML converter, formatter, editor, and a complete YAML guide.",
+      "Free online YAML tools: validator, YAML to JSON converter, JSON to YAML converter, formatter, editor, diff checker, and a complete YAML guide.",
   };
 
   return (
@@ -323,6 +333,7 @@ export default function YamlToolsHubPage() {
           </Link>
         </section>
 
+        <FaqSection items={FAQS} />
         <YamlToolFooter currentPath="/yaml-tools" />
       </div>
     </>

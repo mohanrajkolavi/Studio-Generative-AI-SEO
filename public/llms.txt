@@ -15,12 +15,15 @@
 
 - [SEO & Speed Audit](https://kolavistudio.com/tools/speed-audit): PageSpeed and SEO health check with competitor comparison against 95+ benchmark
 - [AI Bio Generator](https://kolavistudio.com/tools/bio-generator): Platform-optimized bios for LinkedIn, Twitter/X, Instagram, TikTok with multiple versions
+- [AI Email Generator](https://kolavistudio.com/tools/email-generator): Professional emails in 15 types (cold outreach, follow-ups, replies), 3 variants per generation, plus subject lines and signatures
 - [XML Sitemap Generator](https://kolavistudio.com/tools/sitemap-generator): Crawls your site and generates a downloadable sitemap.xml file
 - [AI Slogan Generator](https://kolavistudio.com/tools/slogan-generator): Generates catchy slogans, taglines, mottos, and catchphrases
-- [Motto Generator](https://kolavistudio.com/tools/motto-generator): Creates values-driven mottos for individuals, families, teams, and companies
+- [Motto Generator](https://kolavistudio.com/tools/motto-generator): Creates values-driven mottos for individuals, families, schools, teams, and companies, in English or Latin with translations
+- [All Free Tools](https://kolavistudio.com/tools): Index of every free tool
 
 ## Markdown Tools
 
+- [Markdown Tools Hub](https://kolavistudio.com/markdown-tools): Every markdown tool plus guides for 37 markdown apps and platforms
 - [Markdown Editor](https://kolavistudio.com/markdown-editor): Live preview markdown editor
 - [Markdown Table Generator](https://kolavistudio.com/markdown-table-generator): Visual table builder with markdown output
 - [Markdown to PDF](https://kolavistudio.com/markdown-to-pdf): Convert markdown documents to PDF
@@ -30,12 +33,39 @@
 - [Markdown Syntax Guide](https://kolavistudio.com/markdown-syntax): Complete guide to standard markdown syntax
 - [Extended Syntax Guide](https://kolavistudio.com/markdown-extended-syntax): Tables, footnotes, task lists, and more
 - [Markdown Guide](https://kolavistudio.com/markdown-guide): Beginner-friendly introduction to markdown
-- [Obsidian Markdown Guide](https://kolavistudio.com/markdown-tools/obsidian): Complete Obsidian markdown syntax guide, cheat sheet, wiki-links, callouts, tables, and editor tips
+- [Markdown Hacks](https://kolavistudio.com/markdown-hacks): Workarounds for things markdown does not support natively
+- [GitHub Markdown](https://kolavistudio.com/github-markdown): GitHub Flavored Markdown reference
+- [Slack Markdown](https://kolavistudio.com/slack-markdown): Slack mrkdwn formatting reference
+- [Discord Markdown](https://kolavistudio.com/discord-markdown): Discord text formatting reference
+- [Obsidian Markdown Cheat Sheet](https://kolavistudio.com/markdown-tools/obsidian): Obsidian formatting cheat sheet, LaTeX math symbols, keyboard shortcuts, wiki-links, callouts, and tables
+
+## YAML Tools
+
+- [YAML Tools Hub](https://kolavistudio.com/yaml-tools): All YAML tools and guides
+- [YAML Validator](https://kolavistudio.com/yaml-validator): Validate YAML with line and column error messages
+- [YAML to JSON](https://kolavistudio.com/yaml-to-json): Convert YAML to JSON in the browser
+- [JSON to YAML](https://kolavistudio.com/json-to-yaml): Convert JSON to YAML with custom indentation
+- [YAML Formatter](https://kolavistudio.com/yaml-formatter): Format and beautify YAML, optionally sorting keys
+- [YAML Editor](https://kolavistudio.com/yaml-editor): Browser YAML editor with live validation and autosave
+- [YAML Diff](https://kolavistudio.com/yaml-diff): Line and structural diff of two YAML files
+- [YAML Guide](https://kolavistudio.com/yaml-guide): What YAML is, syntax rules, and how it compares with JSON and XML
+- [YAML Syntax](https://kolavistudio.com/yaml-tools/syntax): YAML syntax reference
+- [YAML Lists, Arrays and Dictionaries](https://kolavistudio.com/yaml-tools/arrays-and-lists): Block and flow lists, empty lists and dictionaries, nested lists
+- [YAML Multiline Strings](https://kolavistudio.com/yaml-tools/multiline-strings): Literal (|) and folded (>) block scalars and chomping indicators
+- [YAML Anchors and Aliases](https://kolavistudio.com/yaml-tools/anchors): Anchors (&), aliases (*), and merge keys (<<:)
+- [YAML Comments](https://kolavistudio.com/yaml-tools/comments): Single-line and block comments
+- [YAML vs JSON](https://kolavistudio.com/yaml-tools/yaml-vs-json): Differences and when to use each
+- [.yml vs .yaml](https://kolavistudio.com/yaml-tools/yml-vs-yaml): Whether the two extensions differ
+- [Python YAML](https://kolavistudio.com/yaml-tools/python): Reading and writing YAML with PyYAML
+- [No module named 'yaml'](https://kolavistudio.com/yaml-tools/no-module-named-yaml): Fix for ModuleNotFoundError: No module named 'yaml'
+- [Kubernetes YAML](https://kolavistudio.com/yaml-tools/kubernetes): Kubernetes manifest structure
+- [Docker Compose YAML](https://kolavistudio.com/yaml-tools/docker-compose): compose.yaml reference
 
 ## Key Pages
 
 - [About Us](https://kolavistudio.com/about): Mission, values, and team story
-- [Pricing](https://kolavistudio.com/pricing): Three tiers - Marketing ($999/mo), Growth ($2,499/mo), Full System (custom)
+- [Services](https://kolavistudio.com/services): Full service catalog
+- [Pricing](https://kolavistudio.com/pricing): Three tiers (Marketing, Growth, Full System); email kolavistudio@gmail.com for a quote
 - [Blog](https://kolavistudio.com/blog): Expert strategies on SEO, conversion optimization, content marketing, and business growth
 - [Contact](https://kolavistudio.com/contact): Get in touch for a free consultation
 - [Partner Program](https://kolavistudio.com/partner): Referral program with 10% setup + 5% recurring commissions

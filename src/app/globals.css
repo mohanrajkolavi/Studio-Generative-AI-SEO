@@ -517,3 +517,11 @@
     }
   }
 }
+
+/* Print / "Save as PDF": drop site chrome so cheat sheets print cleanly */
+@media print {
+  header.sticky,
+  footer {
+    display: none !important;
+  }
+}

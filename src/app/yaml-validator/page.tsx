@@ -92,7 +92,7 @@ export default function YamlValidatorPage() {
     applicationCategory: "DeveloperApplication",
     url: PAGE_URL,
     offers: { price: "0", currency: "USD" },
-    author: { name: "KolaviStudio", url: "https://kolavistudio.com" },
+    author: { name: "Kolavi Studio", url: "https://kolavistudio.com" },
   });
 
   const howToSchema = getHowToSchema({
@@ -103,7 +103,7 @@ export default function YamlValidatorPage() {
     steps: [
       {
         name: "Open the validator",
-        text: "Navigate to the YAML Validator page on KolaviStudio.",
+        text: "Navigate to the YAML Validator page on Kolavi Studio.",
         url: PAGE_PATH,
       },
       {

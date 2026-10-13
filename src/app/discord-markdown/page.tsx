@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getPageMetadata } from "@/lib/seo/metadata";
 import { getBreadcrumbSchema } from "@/lib/seo/jsonld/breadcrumb";
-import { getFAQSchema } from "@/lib/seo/jsonld/faq";
+import { getFAQSchema, type FAQItem } from "@/lib/seo/jsonld/faq";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { CopyButton } from "@/components/markdown-tools/CopyButton";
 import { ToolFooter } from "@/components/markdown-tools/ToolFooter";
 
@@ -51,6 +52,29 @@ const syntaxEntries = [
   },
 ];
 
+const FAQS: FAQItem[] = [
+  {
+    question: "Does Discord support markdown?",
+    answer:
+      "Yes. Discord supports a subset of Markdown for formatting messages. You can use bold, italic, underline, strikethrough, code blocks, spoiler tags, block quotes, headings, lists, and masked links directly in chat messages.",
+  },
+  {
+    question: "How do you bold text in Discord?",
+    answer:
+      "Wrap your text in double asterisks like **text** to make it bold. You can combine bold with italic using ***text*** for bold italic formatting.",
+  },
+  {
+    question: "How do you use code blocks in Discord?",
+    answer:
+      "Use a single backtick for inline code (`code`) or triple backticks for a multi-line code block. Add a language name after the opening triple backticks for syntax highlighting, for example ```javascript.",
+  },
+  {
+    question: "What markdown features does Discord not support?",
+    answer:
+      "Discord does not support images, tables, horizontal rules, or footnotes in markdown. Headings only work at the start of a message, and masked links require the full URL including https://.",
+  },
+];
+
 export default function DiscordMarkdownPage() {
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "Home", url: "/" },
@@ -58,28 +82,7 @@ export default function DiscordMarkdownPage() {
     { name: "Discord Markdown", url: "/discord-markdown" },
   ]);
 
-  const faqSchema = getFAQSchema([
-    {
-      question: "Does Discord support markdown?",
-      answer:
-        "Yes. Discord supports a subset of Markdown for formatting messages. You can use bold, italic, underline, strikethrough, code blocks, spoiler tags, block quotes, headings, lists, and masked links directly in chat messages.",
-    },
-    {
-      question: "How do you bold text in Discord?",
-      answer:
-        "Wrap your text in double asterisks like **text** to make it bold. You can combine bold with italic using ***text*** for bold italic formatting.",
-    },
-    {
-      question: "How do you use code blocks in Discord?",
-      answer:
-        "Use a single backtick for inline code (`code`) or triple backticks for a multi-line code block. Add a language name after the opening triple backticks for syntax highlighting, for example ```javascript.",
-    },
-    {
-      question: "What markdown features does Discord not support?",
-      answer:
-        "Discord does not support images, tables, horizontal rules, or footnotes in markdown. Headings only work at the start of a message, and masked links require the full URL including https://.",
-    },
-  ]);
+  const faqSchema = getFAQSchema(FAQS);
 
   return (
     <>
@@ -197,6 +200,7 @@ export default function DiscordMarkdownPage() {
           </div>
         </div>
 
+        <FaqSection items={FAQS} />
         <ToolFooter currentPath="/discord-markdown" />
       </div>
     </>
