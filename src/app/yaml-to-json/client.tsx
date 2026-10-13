@@ -83,7 +83,10 @@ function YamlToJsonInner({ faqs }: YamlToJsonClientProps) {
     try {
       return hljs.highlight(conversion.output, { language: "json" }).value;
     } catch {
-      return conversion.output;
+      return conversion.output
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
     }
   }, [conversion]);
 
