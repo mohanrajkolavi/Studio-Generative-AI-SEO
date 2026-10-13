@@ -49,10 +49,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `npm run dev` | Start development server |
 | `npm run build` | Production build (regenerates sitemap routes via `prebuild`) |
 | `npm start` | Start production server |
-| `npm run lint` | Run ESLint |
+| `npm run lint` | Run ESLint (flat config in `eslint.config.mjs`) |
 | `npm test` | Run unit tests (`tsx --test`) |
 | `npm run generate:sitemap-routes` | Regenerate static sitemap route list |
-| `npm run db:migrate` | Apply SQL migrations (Supabase/Postgres) |
+| `npm run db:migrate` | Apply SQL migrations in `src/lib/db/migrations` via `psql` (needs `DATABASE_URL`) |
 | `npm run check:secrets` | Verify no secrets in staged files (run before push) |
 | `npm run prepush` | Run sitemap-routes check, `check:secrets`, `lint`, and `test` |
 | `npm run open:browser` | Open app in browser (dev) |
@@ -60,12 +60,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Project Structure
 
 - **`/src/app`** – Next.js App Router
-  - **Marketing site:** home, about, contact, pricing, services, portfolio, industries, medical-spas, blog, legal (privacy, terms, disclaimer, cookies)
+  - **Marketing site:** home, about, contact, pricing, services, portfolio, blog, legal (privacy, terms, disclaimer, cookies); `/medical-spas` redirects to `/`
   - **Free tools (`/tools`):** speed-audit, bio-generator, email-generator, sitemap-generator, slogan-generator, motto-generator
-  - **Markdown tools:** `/markdown-tools` hub plus editor, formatter, to-html, to-pdf, table-generator, cheat-sheet, syntax, extended-syntax, hacks, guide, and platform-specific pages (github-markdown, slack-markdown, discord-markdown)
+  - **Markdown tools:** `/markdown-tools` hub plus editor, formatter, to-html, to-pdf, table-generator, cheat-sheet, syntax, extended-syntax, hacks, guide, platform-specific pages (github-markdown, slack-markdown, discord-markdown), the bespoke `/markdown-tools/obsidian` cheat sheet, and 37 app guides at `/markdown-tools/[slug]`
   - **YAML tools:** `/yaml-tools` hub plus editor, formatter, validator, diff, to-json, json-to-yaml, guide, and tutorial pages (anchors, arrays-and-lists, comments, docker-compose, kubernetes, multiline-strings, python, syntax, yaml-vs-json, yml-vs-yaml, no-module-named-yaml)
-  - **Partner program (`/partner`):** apply, login, dashboard, set-password, forgot-password
-  - **Owner dashboard (`/dashboard`):** Overview, Leads, Content Writer, Recent, Content Maintenance, Partners
+  - **Partner program (`/partner`):** apply, login, dashboard, set-password, forgot-password, terms
+  - **Owner dashboard (`/dashboard`):** Overview, Leads, Content Writer, Recent, Content Maintenance, Partners, Metrics, Rankings, Indexing
   - **API routes (`/api`):** `auth`, `blog`, `contact`, `content-audit`, `content-maintenance`, `leads`, `partner`, `partners`, `revalidate`, `bio-generator`, `email-generator`, `slogan-generator`, `sitemap-generator`, `speed-audit`, `gsc`, `indexing`
   - **SEO surfaces:** `sitemap/` (index + child routes), `robots.ts`, RSS
 - **`/src/components`** – Reusable UI: `blog/`, `booking/`, `contact/`, `dashboard/`, `layout/`, `legal/`, `markdown-tools/`, `partner/`, `sections/`, `tools/`, `ui/` (shadcn), `yaml-tools/`
@@ -79,7 +79,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 - **URL:** `https://<your-domain>/sitemap.xml` (or `http://localhost:3000/sitemap.xml` in dev)
 - **Format:** Sitemap index (Google-style). Root lists child sitemaps; each child is a standard `<urlset>`.
-- **Child sitemaps:** `/sitemap/static`, `/sitemap/posts`, `/sitemap/categories`, `/sitemap/tags`
+- **Child sitemaps:** `/sitemap/static`, `/sitemap/posts`, `/sitemap/categories`, `/sitemap/tags`, `/sitemap/images`
 - **Implementation:** `src/app/sitemap/route.ts` (index) + `src/app/sitemap/*/route.ts` (children); shared logic in `src/lib/sitemap/`
 - **Standards:** [sitemaps.org](https://www.sitemaps.org/protocol.html) (UTF-8, entity escaping, &lt;loc&gt; &lt; 2048 chars, schemaLocation for validation)
 - **robots.txt** references `Sitemap: <SITE_URL>/sitemap.xml`
@@ -104,14 +104,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 - **Site:** Mobile-first responsive design; SEO (metadata, JSON-LD, sitemap, FAQ schema); headless WordPress blog with ISR and paginated slugs
 - **Security:** Security headers (CSP, X-Frame-Options, etc.), HTML sanitization for post content; Core Web Vitals; skip-to-main link and jsx-a11y
-- **Free tools:** Speed/SEO audit, AI bio generator, AI email generator (15 types, 3 variants), XML sitemap generator (crawls a URL), AI slogan generator, motto generator
+- **Free tools:** Speed/SEO audit, AI bio generator, AI email generator (15 types, 3 variants), XML sitemap generator (crawls a URL), AI slogan generator, motto generator (English or Latin with translations)
 - **Markdown toolkit:** Live editor, formatter, table generator, Markdown→HTML, Markdown→PDF, plus reference pages for syntax, extended syntax, hacks, GitHub/Slack/Discord flavors
 - **YAML toolkit:** Editor, formatter, validator, diff viewer, YAML↔JSON converters, plus tutorial pages (anchors, lists, multiline strings, comments, Docker Compose, Kubernetes, Python, syntax)
 - **Partner program:** Partner portal (`/partner`) with apply, login, dashboard, set-password, forgot-password; Supabase auth; referral links; partner terms
 - **Dashboard:** Owner dashboard (Overview, Leads, Content Writer, Recent, Content Maintenance, Partners); login with rate limiting; optional Supabase for Blog Maker "Recent" history
 - **Content Writer (Blog Maker):** AI pipeline (Serper/Jina/Gemini, OpenAI brief, Claude draft, humanize, SEO audit, fact check); publishable = 75%+ score and no Level 1 fails
 - **Content audit:** In-app SEO article audit (`src/lib/seo/article-audit.ts`); optional Python E-E-A-T tool in `tools/content_audit/`; API route `/api/content-audit/quality`
-- **Scalable:** Multiple verticals (e.g. medical-spas, industries); legal pages (privacy, terms, disclaimer, cookies)
 
 ## License
 

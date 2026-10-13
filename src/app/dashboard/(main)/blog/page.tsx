@@ -1859,10 +1859,7 @@ export default function BlogMakerPage() {
       const urls = isValidCustom ? [...urlsToUse, customCompetitorUrl.trim()] : urlsToUse;
       if (urls.length === 0) return;
       autoAdvanceCompetitorsDoneRef.current = true;
-      if (demoRunning && demoChunkOutputs.researchSerp) {
-        demoDispatch({ type: "TRANSITION", step: "fetch", startedAt: Date.now(), progress: demoProgress });
-        demoDispatch({ type: "SET_ELAPSED_TICK", tick: 0 });
-      } else if (jobId && urls.length >= 1 && urls.length <= 3) {
+      if (jobId && urls.length >= 1 && urls.length <= 3) {
         startResearchFetch(jobId, urls);
       }
     }, AUTO_ADVANCE_MS);
@@ -1878,10 +1875,7 @@ export default function BlogMakerPage() {
     }
     const t = setTimeout(() => {
       autoAdvanceBriefDoneRef.current = true;
-      if (demoRunning && demoChunkOutputs.brief) {
-        demoDispatch({ type: "TRANSITION", step: "draft", startedAt: Date.now(), progress: demoProgress });
-        demoDispatch({ type: "SET_ELAPSED_TICK", tick: 0 });
-      } else if (jobId) {
+      if (jobId) {
         const N = chunkOutputs.brief?.outline?.length ?? 0;
         const existing = editedOutline.filter((e) => e.originalIndex >= 0);
         const added = editedOutline.filter((e) => e.originalIndex < 0);
